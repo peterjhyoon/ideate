@@ -1,2 +1,2 @@
-# projecthub
+# Ideafy
 Linkedin for Projects
