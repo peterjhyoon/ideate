@@ -1,33 +1,33 @@
-#
+# specify node version
 FROM node:21
 
-# Set up work directory in container
+# set up work directory in container
 WORKDIR /app
 
-# COPY package.json and package-lock.json
-COPY package*.json ./server/
+# copy package.json and package-lock.json
+COPY server/package*.json ./server/
 
-# Server dependencies
+# server dependencies
 RUN cd server && npm install
 
-# Copy client package and package-lock
+# copy client package and package-lock
 COPY client/package*.json ./client/
 
-# Client dependencies
+# client dependencies
 RUN cd client && npm install
 
 # Copy source code
 COPY . .
 
-# Build
+# build
 WORKDIR /app/client
 RUN npm run build
 
-# Server app static files from server
+# server app static files from server
 WORKDIR /app/server
 
-# Port to listen to
+# port to listen to
 EXPOSE 3000
 
-# Start server
+# start server
 CMD ["npm", "start"]
