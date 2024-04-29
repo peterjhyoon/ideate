@@ -29,7 +29,11 @@ app.use(cookieParser())
 // Automatically access files in public directory
 app.use('/', express.static(path.join(__dirname, 'public')))
 
+// Routes for the backend API
 app.use('/', require('./routes/root'))
+app.use('/users', require('./routes/userRoutes'))
+app.use('/projects', require('./routes/projectRoutes'))
+app.use('/applications', require('./routes/applicationRoutes'))
 
 // Process 404 not found
 app.all('*', (req, res) => { 
