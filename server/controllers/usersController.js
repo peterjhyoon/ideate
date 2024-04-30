@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 // @route GET /users
 // @access Private
 const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find().select('-password').lean()
+    const users = await User.find().select('-password').lean().exec()
     if (!users?.length) {
         return res.status(400).json({ message: 'No users found' })
     }
@@ -39,13 +39,13 @@ const createNewUser = asyncHandler(async (req, res) => {
     // Create and store new user
     let userObject
     if (profilePicture && description) {
-        userObject = { email, password, profilePicture, firstName, lastName, description }
+        userObject = { email, 'password': hashedPwd, profilePicture, firstName, lastName, description }
     } else if (profilePicture) {
-        userObject = { email, password, profilePicture, firstName, lastName }
+        userObject = { email, 'password': hashedPwd, profilePicture, firstName, lastName }
     } else if (description) {
-        userObject = { email, password, firstName, lastName, description }
+        userObject = { email, 'password': hashedPwd, firstName, lastName, description }
     } else {
-        userObject = { email, password, firstName, lastName }
+        userObject = { email, 'password': hashedPwd, firstName, lastName }
     }
 
     const user = await User.create(userObject)
@@ -58,12 +58,31 @@ const createNewUser = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get user by ID
+// @route GET /users/:id
+// @access Private
+const getUser = asyncHandler(async (req, res) => {
+    // Load ID from route parameter
+    const id = req.params.id
+
+    const user = await User.findById(id).select('-password').lean().exec()
+
+    if (!user) {
+        return res.status(400).json({ message: 'User not found' })
+    }
+
+    res.json(user)
+})
+
 // @desc Update a user
-// @route PATCH /users
+// @route PATCH /users/:id
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
     // Load data from request
-    const { id, email, password, profilePicture, firstName, lastName, description} = req.body
+    const { email, password, profilePicture, firstName, lastName, description} = req.body
+
+    // Load ID from route parameter
+    const id = req.params.id
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
@@ -116,11 +135,11 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Delete a user
-// @route DELETE /users
+// @route DELETE /users/:id
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
-    // Load data from request
-    const { id } = req.body
+    // Load ID from route parameter
+    const id = req.params.id
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
@@ -154,6 +173,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 module.exports = {
     getAllUsers,
     createNewUser,
+    getUser,
     updateUser,
     deleteUser
 }
