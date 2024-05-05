@@ -24,9 +24,9 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        description: {
+        university: {
             type: String,
-            default: "Nothing here. "
+            required: true
         },
     },
     { // Automatically generates created and updated times

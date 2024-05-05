@@ -6,15 +6,21 @@ const projectSchema = new mongoose.Schema(
             type: String,
             required: true
         }, 
-        location: {
-            type: String,
-            default: "Remote"
-        }, 
         user: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'User'
         }, 
+        location: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Location'
+        }, 
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Category'
+        },
         description: {
             type: String,
             default: "This project has no description :("

@@ -2,14 +2,14 @@
 // @route GET /applications
 // @access Private
 const getAllApplications = asyncHandler(async (req, res) => {
-    
+    // TODO
 })
 
 // @desc Create new application
 // @route POST /applications
 // @access Private
 const createNewApplication = asyncHandler(async (req, res) => {
-    
+    // TODO
 })
 
 // @desc Get application by ID
@@ -18,20 +18,22 @@ const createNewApplication = asyncHandler(async (req, res) => {
 const getApplication = asyncHandler(async (req, res) => {
     // Load ID from route parameter
     const id = req.params.id
+    
+    // TODO
 })
 
 // @desc Update a application
 // @route PATCH /applications
 // @access Private
 const updateApplication = asyncHandler(async (req, res) => {
-    
+    // TODO
 })
 
 // @desc Delete a application
 // @route DELETE /applications
 // @access Private
 const deleteApplication = asyncHandler(async (req, res) => {
-    
+    // TODO
 })
 
 // @desc Get application by User ID
@@ -40,6 +42,8 @@ const deleteApplication = asyncHandler(async (req, res) => {
 const getApplicationByUser = asyncHandler(async (req, res) => {
     // Load ID from route parameter
     const id = req.params.id
+
+    // TODO
 })
 
 // @desc Get application by Project ID
@@ -48,6 +52,8 @@ const getApplicationByUser = asyncHandler(async (req, res) => {
 const getApplicationByProject = asyncHandler(async (req, res) => {
     // Load ID from route parameter
     const id = req.params.id
+
+    //TODO
 })
 
 module.exports = {

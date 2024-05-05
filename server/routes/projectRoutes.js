@@ -11,4 +11,7 @@ router.route('/:id')
     .patch(projectsController.updateProject)
     .delete(projectsController.deleteProject)
 
+router.route('/search')
+    .get(projectsController.getSearchProject)
+
 module.exports = router

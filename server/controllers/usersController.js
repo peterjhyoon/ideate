@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const Project = require('../models/Project')
+const Application = require('../models/Application')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 
@@ -19,7 +20,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @access Private
 const createNewUser = asyncHandler(async (req, res) => {
     // Load data from request
-    const { email, password, profilePicture, firstName, lastName, description} = req.body
+    const { email, password, profilePicture, firstName, lastName, university} = req.body
 
     // Confirm data
     if (!email || !password || !firstName || !lastName) {
@@ -37,16 +38,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10)
 
     // Create and store new user
-    let userObject
-    if (profilePicture && description) {
-        userObject = { email, 'password': hashedPwd, profilePicture, firstName, lastName, description }
-    } else if (profilePicture) {
-        userObject = { email, 'password': hashedPwd, profilePicture, firstName, lastName }
-    } else if (description) {
-        userObject = { email, 'password': hashedPwd, firstName, lastName, description }
-    } else {
-        userObject = { email, 'password': hashedPwd, firstName, lastName }
-    }
+    const userObject = profilePicture ? { email, 'password': hashedPwd, profilePicture, firstName, lastName, university } : { email, 'password': hashedPwd, firstName, lastName, university }
 
     const user = await User.create(userObject)
 
@@ -79,7 +71,7 @@ const getUser = asyncHandler(async (req, res) => {
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
     // Load data from request
-    const { email, password, profilePicture, firstName, lastName, description} = req.body
+    const { email, password, profilePicture, firstName, lastName, university} = req.body
 
     // Load ID from route parameter
     const id = req.params.id
@@ -122,8 +114,8 @@ const updateUser = asyncHandler(async (req, res) => {
         user.lastName = lastName
     }
 
-    if (description) {
-        user.description = description
+    if (university) {
+        user.university = university
     }
 
     // Save changes
@@ -146,15 +138,15 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 
     // Check if user still has any applications
-    const application = await Note.findOne({ user: id }).lean().exec()
+    const application = await Application.findOne({ user: id }).lean().exec()
     if (application) {
-        return res.status(400).json({ message: 'User has application' })
+        return res.status(400).json({ message: 'User still has application, cannot delete' })
     }
 
     // Check if user still has any projects
-    const project = await Note.findOne( { user: id }).lean().exec()
+    const project = await Project.findOne( { user: id }).lean().exec()
     if (project) {
-        return res.status(400).json({ message: 'User has application' })
+        return res.status(400).json({ message: 'User still has project, cannot delete' })
     }
 
     // Fetch user
@@ -165,7 +157,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
 
     // Delete user
-    deleted = await user.deleteOne()
+    await user.deleteOne()
 
     res.json(`Username ${user.username} with ID ${user._id} deleted`)
 })
