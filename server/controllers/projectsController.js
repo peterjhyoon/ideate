@@ -1,4 +1,3 @@
-const User = require('../models/User')
 const Project = require('../models/Project')
 const Application = require('../models/Application')
 const Location = require('../models/Location')
@@ -10,10 +9,10 @@ const asyncHandler = require('express-async-handler')
 // @access Private
 const getAllProjects = asyncHandler(async (req, res) => {
     // Fetch projects
-    const projects = Project.find().lean().exec()
+    const projects = Project.find().populate('user').lean().exec()
 
     if (!projects?.length) {
-        return res.status(400).json({ message: 'No projects found' })
+        return res.status(404).json({ message: 'No projects found' })
     }
 
     // Replace location and category ID with info
@@ -31,7 +30,7 @@ const getAllProjects = asyncHandler(async (req, res) => {
 // @access Private
 const createNewProject = asyncHandler(async (req, res) => {
     // Load data from request
-    const { name, user, location, category, description } = req.body
+    const { name, logo, user, location, category, description } = req.body
 
     // Confirm data
     if (!name || !user || !location || !category) {
@@ -48,6 +47,10 @@ const createNewProject = asyncHandler(async (req, res) => {
     // Create project
     let projectObject = { name, user, location, category }
 
+    if (logo) {
+        projectObject.logo = logo
+    }
+
     if (description) {
         projectObject.description = description
     }
@@ -55,23 +58,23 @@ const createNewProject = asyncHandler(async (req, res) => {
     const project = await Project.create(projectObject)
 
     if (project) {
-        res.status(201).json({ message: `New project ${name} created` })
+        res.status(200).json({ message: `New project ${name} created` })
     } else {
         res.status(400).json({ message: 'Invalid data received' })
     }
 })
 
 // @desc Get project by ID
-// @route GET /projects/:id
+// @route GET /projects/id
 // @access Private
 const getProject = asyncHandler(async (req, res) => {
-    // Load ID from route parameter
-    const id = req.params.id
+    // Load ID from request
+    const { id } = req.body
 
-    const project = await Project.findById(id).lean().exec()
+    const project = await Project.findById(id).populate(user).lean().exec()
     
     if (!project) {
-        res.status(400).json({ message: 'Project not found' })
+        res.status(404).json({ message: 'Project not found' })
     }
 
     // Get location and category from database and override IDs with information
@@ -82,14 +85,11 @@ const getProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Update a project
-// @route PATCH /projects/:id
+// @route PATCH /projects
 // @access Private
 const updateProject = asyncHandler(async (req, res) => {
     // Load data from request
-    const { name, user, location, category, description } = req.body
-
-    // Load ID from route parameter
-    const id = req.params.id
+    const { id, name, logo, user, location, category, description } = req.body
 
     if (!id) {
         return res.status(400).json({ message: 'Project ID required' })
@@ -111,6 +111,10 @@ const updateProject = asyncHandler(async (req, res) => {
         }
 
         project.name = name
+    }
+
+    if (logo) {
+        project.logo = logo
     }
 
     if (user) {
@@ -138,11 +142,11 @@ const updateProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Delete a project
-// @route DELETE /projects/:id
+// @route DELETE /projects/id
 // @access Private
 const deleteProject = asyncHandler(async (req, res) => {
-    // Load ID from route parameter
-    const id = req.params.id
+    // Load ID from request
+    const { id } = req.body
 
     if (!id) {
         res.status(400).json({ message: 'Project ID required' })
@@ -169,7 +173,7 @@ const deleteProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Search project through key
-// @route GET /projects/search/:id
+// @route GET /projects/search
 // @access Private
 const getSearchProject = asyncHandler(async (req, res) => {
     // Load data from request
@@ -190,11 +194,11 @@ const getSearchProject = asyncHandler(async (req, res) => {
         query.category = category
     }
 
-    // Fetch projects with query
-    const projects = Project.find(query).lean().exec()
+    // Fetch projects with query and sort in terms of relevance
+    const projects = Project.find(query).populate('user').sort({ score: { $meta: 'textScore' } }).lean().exec()
 
     if (!projects?.length) {
-        return res.status(400).json({ message: 'No projects found' })
+        return res.status(404).json({ message: 'No projects found' })
     }
 
     // Replace location and category ID with info

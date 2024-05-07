@@ -6,7 +6,7 @@ router.route('/')
     .get(projectsController.getAllProjects)
     .post(projectsController.createNewProject)
 
-router.route('/:id')
+router.route('/id')
     .get(projectsController.getProject)
     .patch(projectsController.updateProject)
     .delete(projectsController.deleteProject)

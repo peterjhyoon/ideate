@@ -34,6 +34,9 @@ app.use('/', require('./routes/root'))
 app.use('/users', require('./routes/userRoutes'))
 app.use('/projects', require('./routes/projectRoutes'))
 app.use('/applications', require('./routes/applicationRoutes'))
+app.use('/saves', require('./routes/saveRoutes'))
+app.use('/locations', require('./routes/locationRoutes'))
+app.use('/categories', require('./routes/categoryRoutes'))
 
 // Process 404 not found
 app.all('*', (req, res) => { 

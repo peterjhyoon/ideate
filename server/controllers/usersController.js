@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt')
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-password').lean().exec()
     if (!users?.length) {
-        return res.status(400).json({ message: 'No users found' })
+        return res.status(404).json({ message: 'No users found' })
     }
     res.json(users)
 })
@@ -44,37 +44,34 @@ const createNewUser = asyncHandler(async (req, res) => {
 
     // Check success or not
     if (user) {
-        res.status(201).json({ message: `New User ${email} created` })
+        res.status(200).json({ message: `New User ${email} created` })
     } else {
         res.status(400).json({ message: 'Invalid user data received' })
     }
 })
 
 // @desc Get user by ID
-// @route GET /users/:id
+// @route GET /users/id
 // @access Private
 const getUser = asyncHandler(async (req, res) => {
-    // Load ID from route parameter
-    const id = req.params.id
+    // Load ID from request
+    const { id } = req.body
 
     const user = await User.findById(id).select('-password').lean().exec()
 
     if (!user) {
-        return res.status(400).json({ message: 'User not found' })
+        return res.status(404).json({ message: 'User not found' })
     }
 
     res.json(user)
 })
 
 // @desc Update a user
-// @route PATCH /users/:id
+// @route PATCH /users/id
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
     // Load data from request
-    const { email, password, profilePicture, firstName, lastName, university} = req.body
-
-    // Load ID from route parameter
-    const id = req.params.id
+    const { id, email, password, profilePicture, firstName, lastName, university} = req.body
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
@@ -127,11 +124,11 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Delete a user
-// @route DELETE /users/:id
+// @route DELETE /users/id
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
-    // Load ID from route parameter
-    const id = req.params.id
+    // Load ID from request
+    const { id } = req.body
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })

@@ -6,15 +6,15 @@ router.route('/')
     .get(saveRoutes.getAllSaves)
     .post(saveRoutes.createNewSave)
 
-router.route('/:id')
+router.route('/id')
     .get(saveRoutes.getSave)
     .patch(saveRoutes.updateSave)
     .delete(saveRoutes.deleteSave)
 
-router.route('/user/:id')
+router.route('/user')
     .get(saveRoutes.getSaveByUser)
 
-router.route('/project/:id')
+router.route('/project')
     .get(saveRoutes.getSaveByProject)
 
 module.exports = router

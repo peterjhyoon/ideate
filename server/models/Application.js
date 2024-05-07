@@ -12,9 +12,9 @@ const applicationSchema = new mongoose.Schema(
             required: true,
             ref: 'Project'
         },
-        completed: {
+        active: {
             type: Boolean,
-            default: false
+            default: true
         },
         // Application responses
         // responses: {

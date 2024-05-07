@@ -6,6 +6,10 @@ const projectSchema = new mongoose.Schema(
             type: String,
             required: true
         }, 
+        logo: {
+            type: String
+            // TODO: Add default logo
+        },
         user: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
