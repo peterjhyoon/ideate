@@ -6,7 +6,7 @@ const asyncHandler = require('express-async-handler')
 // @route GET /applications
 // @access Private
 const getAllApplications = asyncHandler(async (req, res) => {
-    // Fetch applications and populate project
+    // Fetch applications
     const applications = await Application.find().lean().exec()
 
     if (!applications?.length) {
@@ -72,11 +72,9 @@ const getApplication = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'ID required' })
     }
     
-    // Populate both user and project to display application
-    const application = await Application.findByID(id).populate([
-        { path: 'user' },
-        { path: 'project' }
-    ]).lean().exec()
+    // Fetch application
+    // Note: didn't populate user nor project, fetch user and project in frontend
+    const application = await Application.findByID(id).lean().exec()
 
     if (!application) {
         return res.status(404).json({ message: 'Application not found' })
