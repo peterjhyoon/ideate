@@ -1,0 +1,11 @@
+body {
+    background-color: #800080;
+}
+
+h1 {
+    padding-top: 25%;
+    text-align: center;
+    font-size: 2.5rem;
+    font-family:'Times New Roman', Times, serif;
+    color: whitesmoke;
+}
