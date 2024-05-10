@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
         },
     },
     { // Automatically generates created and updated times
-        timestamps: True
+        timestamps: true
     }
 )
 

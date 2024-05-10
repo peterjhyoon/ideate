@@ -23,7 +23,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     const { email, password, profilePicture, firstName, lastName, university} = req.body
 
     // Confirm data
-    if (!email || !password || !firstName || !lastName) {
+    if (!email || !password || !firstName || !lastName || !university) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -56,6 +56,10 @@ const createNewUser = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
     // Load ID from request
     const { id } = req.body
+    
+    if (!id) {
+        return res.status(400).json({ message: 'User ID required' })
+    }
 
     const user = await User.findById(id).select('-password').lean().exec()
 
@@ -78,7 +82,7 @@ const updateUser = asyncHandler(async (req, res) => {
     }
 
     // Fetch user
-    const user = await User.findByID(id).exec()
+    const user = await User.findById(id).exec()
 
     if (!user) {
         return res.status(400).json({ message: 'User not found' })
@@ -156,7 +160,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     // Delete user
     await user.deleteOne()
 
-    res.json(`Username ${user.username} with ID ${user._id} deleted`)
+    res.json(`Username ${user.email} with ID ${user._id} deleted`)
 })
 
 module.exports = {

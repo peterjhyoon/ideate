@@ -3,13 +3,14 @@ const Application = require('../models/Application')
 const Location = require('../models/Location')
 const Category = require('../models/Category')
 const asyncHandler = require('express-async-handler')
+const { ObjectId } = require('mongodb');
 
 // @desc Get all projects
 // @route GET /projects
 // @access Private
 const getAllProjects = asyncHandler(async (req, res) => {
     // Fetch projects
-    const projects = Project.find().populate('user').lean().exec()
+    const projects = await Project.find().populate('user').lean().exec()
 
     if (!projects?.length) {
         return res.status(404).json({ message: 'No projects found' })
@@ -179,23 +180,54 @@ const getSearchProject = asyncHandler(async (req, res) => {
     // Load data from request
     const { key, location, category } = req.body
 
-    // Define query according to request given
-    let query = { }
+    // Create a pipeline for queries
+    const pipeline = []
 
     if (key) {
-        query.$text = { $search: key }
+        // Define a search query for name and description
+        pipeline.push({
+            $search: {
+                index: 'project_search',
+                text: {
+                    query: key,
+                    path: ['name', 'description'],
+                    fuzzy: {} // Enable fuzzy search to search for substrings
+                }
+            }
+        })
+
+        // Define a sort query to sort depending on the relevancy
+        pipeline.push({
+            $sort: {
+                score: { $meta: 'textScore' }
+            }
+        })
     }
 
-    if (location) {
-        query.location = location
+    // Define match query when location and category are provided
+    if (location && category) {
+        pipeline.push({
+            $match: {
+                location: new ObjectId(location), // I believe this shows deprecated due to package clashes
+                category: new ObjectId(category)  // Done the same way as the newest documentation for MongoDB
+            }
+        })
+    } else if (category) {
+        pipeline.push({
+            $match: {
+                category: new ObjectId(category)
+            }
+        })
+    } else if (location) {
+        pipeline.push({
+            $match: {
+                location: new ObjectId(location)
+            }
+        })
     }
 
-    if (category) {
-        query.category = category
-    }
-
-    // Fetch projects with query and sort in terms of relevance
-    const projects = Project.find(query).populate('user').sort({ score: { $meta: 'textScore' } }).lean().exec()
+    // Aggregate the pipeline to run the queries
+    const projects = await Project.aggregate(pipeline)
 
     if (!projects?.length) {
         return res.status(404).json({ message: 'No projects found' })
