@@ -1,14 +1,15 @@
+import { Link } from 'react-router-dom';
 import Login from "../components/user/Login";
 import CreateAcc from "../components/user/CreateAcc";
 
 function Accounts() {
     return (
-        <div className="flex w-full h-screen">
-            <div className="w-2/3" id="login-comp">
+        <div className="flex flex-col lg:flex-row lg:h-screen w-full h-screen">
+            <div className="lg:w-2/3 lg:h-screen w-full" id="login-comp">
                 <Login />
             </div>
-            <div className="w-1/3 bg-purple-700 text-white" id="create-acc-comp">
-                {/* add createacc comp here */}
+            <div className="lg:w-1/3 w-full h-screen" id="create-acc-comp">
+                <CreateAcc />
             </div>
         </div>
     )
