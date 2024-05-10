@@ -1,4 +1,5 @@
 const Project = require('../models/Project')
+const User = require('../models/User')
 const Application = require('../models/Application')
 const Location = require('../models/Location')
 const Category = require('../models/Category')
@@ -235,9 +236,10 @@ const getSearchProject = asyncHandler(async (req, res) => {
 
     // Replace location and category ID with info
     const projectsWithInfo = await Promise.all(projects.map(async (project) => {
+        const user = await User.findById(project.user).lean().exec()
         const location = await Location.findById(project.location).lean().exec()
         const category = await Category.findById(project.category).lean().exec()
-        return { ...project, location: location, category: category.category }
+        return { ...project, user: user, location: location, category: category.category }
     }))
 
     res.json(projectsWithInfo)
