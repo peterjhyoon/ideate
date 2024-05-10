@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import ProjectList from "../components/ProjectList";
+import Navbar from "../components/ui/Navbar";
+import Footer from "../components/ui/Footer";
+import ProjectList from "../components/projects/ProjectList";
 
 function ProjectDisplay() {
     return (

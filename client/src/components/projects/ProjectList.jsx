@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import SearchBar from "./SearchBar";
+import SearchBar from "../ui/SearchBar";
+import ProjectDetail from './ProjectDetail';
 
 const dummyData = [
     {
@@ -35,10 +36,10 @@ const dummyData = [
 ];
 
 function ProjectList() {
-    // const [selectedProject, setSelectedProject] = useState(null);
-    // const handleSelectedProject = (project) => {
-    //     setSelectedProject(project);
-    // }
+    const [selectedProject, setSelectedProject] = useState(null);
+    const handleSelectedProject = (project) => {
+        setSelectedProject(project);
+    }
 
     return (
         <div className="w-full bg-gray-200 flex-grow flex flex-col justify-center">
@@ -47,7 +48,7 @@ function ProjectList() {
                 <hr className="my-5 w-5/6 mx-auto" />
                 <div className="p-4 overflow-y-scroll" style={{ height: '50vh' }} id="proj-list">
                     {dummyData.map((project, index) => (
-                    <div key={index} className="mx-auto w-5/6 mb-4">
+                    <div key={index} className="mx-auto w-5/6 mb-4" onClick={() => handleSelectedProject(project)}>
                         <h2 className="text-xl font-bold">{project.project_name}</h2>
                         <p>{project.description}</p>
                         <hr className="my-5 mx-auto" />
@@ -55,9 +56,9 @@ function ProjectList() {
                     ))}
                 </div>
             </div>
-            {/* {selectedProject && (
-                <ProjectDetails project={selectedProject} onClose={() => setSelectedProject(null)} />
-            )} */}
+            {selectedProject && (
+                <ProjectDetail project={selectedProject} />
+            )}
         </div>   
     )
 }
