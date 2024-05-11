@@ -10,7 +10,7 @@ const getAllApplications = asyncHandler(async (req, res) => {
     const applications = await Application.find().lean().exec()
 
     if (!applications?.length) {
-        res.status(404).json({ message: 'No applications found' })
+        return res.status(404).json({ message: 'No applications found' })
     }
 
     res.json(applications)
@@ -24,7 +24,18 @@ const createNewApplication = asyncHandler(async (req, res) => {
     const { user, project, active } = req.body
 
     if (!user || !project) {
-        res.status(400).json({ message: 'All fields required' })
+        return res.status(400).json({ message: 'All fields required' })
+    }
+
+    // Prevent user from applying to his own project
+    const checkProject = await Project.findById(project).lean().exec()
+
+    if (!checkProject) {
+        return res.status(400).json({ message: 'Invalid project' })
+    }
+
+    if (user == checkProject.user) {
+        return res.status(400).json({ message: 'User can not apply to his own project' })
     }
 
     // Check if user has already apply to the project
@@ -41,9 +52,9 @@ const createNewApplication = asyncHandler(async (req, res) => {
         const created = await Application.create(applicationObject)
 
         if (created) {
-            res.json({ message: 'New application created' })
+            return res.json({ message: 'New application created' })
         } else {
-            res.status(400).json({ message: 'Invalid data received' })
+            return res.status(400).json({ message: 'Invalid data received' })
         }
     } else if (!application.active) { // User has applied before but application is inactive
         // Reactivate application
@@ -51,9 +62,9 @@ const createNewApplication = asyncHandler(async (req, res) => {
         const updated = await application.save()
 
         if (updated) {
-            res.json({ message: 'Application updated' })
+            return res.json({ message: 'Application updated' })
         } else {
-            res.status(400).json({ message: 'Invalid data received' })
+            return res.status(400).json({ message: 'Invalid data received' })
         }
     } else { // User has applied before but application is still active
         // No action required
@@ -74,7 +85,7 @@ const getApplication = asyncHandler(async (req, res) => {
     
     // Fetch application
     // Note: didn't populate user nor project, fetch user and project in frontend
-    const application = await Application.findByID(id).lean().exec()
+    const application = await Application.findById(id).lean().exec()
 
     if (!application) {
         return res.status(404).json({ message: 'Application not found' })
@@ -100,17 +111,21 @@ const updateApplication = asyncHandler(async (req, res) => {
     if (!application) {
         return res.status(400).json({ message: 'Application not found' })
     }
+    
+    console.log(application._id)
 
-    if (active) {
+    if (active != null) {
         application.active = active
+    }
 
-        const updated = await application.save()
+    console.log (application.active)
 
-        if (updated) {
-            res.json({ message: 'Application updated' })
-        } else {
-            res.status(400).json({ message: 'Invalid data received' })
-        }
+    const updated = await application.save()
+
+    if (updated) {
+        res.json({ message: 'Application updated' })
+    } else {
+        res.status(400).json({ message: 'Invalid data received' })
     }
 })
 
@@ -185,7 +200,10 @@ const getApplicationByProject = asyncHandler(async (req, res) => {
     }
 
     // Populate user to display user when viewed by project owner
-    const applications = await Application.find({ project }).populate('user').lean().exec()
+    const applications = await Application.find({ project }).populate({
+        path: 'user',
+        select: '-password' // Exclude the 'password' field
+    }).lean().exec()
 
     if (!applications?.length) {
         return res.status(404).json({ message: 'No applications found' })

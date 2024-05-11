@@ -11,7 +11,10 @@ const { ObjectId } = require('mongodb');
 // @access Private
 const getAllProjects = asyncHandler(async (req, res) => {
     // Fetch projects
-    const projects = await Project.find().populate('user').lean().exec()
+    const projects = await Project.find().populate({
+        path: 'user',
+        select: '-password' // Exclude the 'password' field
+    }).lean().exec()
 
     if (!projects?.length) {
         return res.status(404).json({ message: 'No projects found' })
@@ -73,7 +76,10 @@ const getProject = asyncHandler(async (req, res) => {
     // Load ID from request
     const { id } = req.body
 
-    const project = await Project.findById(id).populate(user).lean().exec()
+    const project = await Project.findById(id).populate({
+        path: 'user',
+        select: '-password' // Exclude the 'password' field
+    }).lean().exec()
     
     if (!project) {
         res.status(404).json({ message: 'Project not found' })
@@ -236,7 +242,7 @@ const getSearchProject = asyncHandler(async (req, res) => {
 
     // Replace location and category ID with info
     const projectsWithInfo = await Promise.all(projects.map(async (project) => {
-        const user = await User.findById(project.user).lean().exec()
+        const user = await User.findById(project.user).select('-password').lean().exec()
         const location = await Location.findById(project.location).lean().exec()
         const category = await Category.findById(project.category).lean().exec()
         return { ...project, user: user, location: location, category: category.category }
