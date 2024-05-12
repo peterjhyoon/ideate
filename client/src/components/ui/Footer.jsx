@@ -1,5 +1,4 @@
-
-function Footer() {
+const Footer = () => {
     return (
         <footer className="bg-purple-700 text-white py-5 inset-x-0 bottom-0">
             <div className="container mx-auto text-center">

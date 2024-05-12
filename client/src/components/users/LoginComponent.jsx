@@ -1,7 +1,7 @@
 import LoginInput from "../ui/LoginInput";
 import AccButton from "./AccButtons";
 
-function Login() {
+const LoginComponent = () => {
     return (
         <div className="container mx-auto text-center flex flex-col justify-center h-screen">
             <h1 className="text-4xl pb-10 font-bold mx-auto">Login to Your Account</h1>
@@ -25,4 +25,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default LoginComponent;

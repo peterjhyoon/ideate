@@ -1,5 +1,4 @@
-
-function SearchBar() {
+const SearchBar = () => {
     return (
         <div className="flex items-center">
             <input

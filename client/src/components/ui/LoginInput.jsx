@@ -1,4 +1,4 @@
-function LoginInput( {input_placeholder} ) {
+const LoginInput = ({ input_placeholder }) => {
     return (
         <div className="flex items-center py-5">
             <input
