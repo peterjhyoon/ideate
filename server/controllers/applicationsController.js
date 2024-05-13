@@ -73,11 +73,11 @@ const createNewApplication = asyncHandler(async (req, res) => {
 })
 
 // @desc Get application by ID
-// @route GET /applications/id
+// @route GET /applications/id/:id
 // @access Private
 const getApplication = asyncHandler(async (req, res) => {
-    // Load ID from request
-    const { id } = req.body
+    // Load ID from parameters
+    const { id } = req.params
 
     if (!id) {
         return res.status(400).json({ message: 'ID required' })
@@ -95,11 +95,14 @@ const getApplication = asyncHandler(async (req, res) => {
 })
 
 // @desc Update a application
-// @route PATCH /applications/id
+// @route PATCH /applications/id/:id
 // @access Private
 const updateApplication = asyncHandler(async (req, res) => {
-    // Load ID from request
-    const { id, active } = req.body // No need to update user or project
+    // Load ID from parameters
+    const { id } = req.params
+
+    // Load request
+    const {active } = req.body // No need to update user or project
 
     if (!id) {
         return res.status(400).json({ message: 'ID required' })
@@ -130,11 +133,11 @@ const updateApplication = asyncHandler(async (req, res) => {
 })
 
 // @desc Delete a application
-// @route DELETE /applications/id
+// @route DELETE /applications/id/:id
 // @access Private
 const deleteApplication = asyncHandler(async (req, res) => {
-    // Load ID from request
-    const { id } = req.body
+    // Load ID from parameters
+    const { id } = req.params
 
     if (!id) {
         return res.status(400).json({ message: 'ID required' })
@@ -152,11 +155,14 @@ const deleteApplication = asyncHandler(async (req, res) => {
 })
 
 // @desc Get application by User ID and search project name
-// @route GET /applications/user
+// @route GET /applications/user/:user
 // @access Private
 const getApplicationByUser = asyncHandler(async (req, res) => {
-    // Load user ID and search key from request
-    const { user, key } = req.body
+    // Load User ID from parameters
+    const { user } = req.params
+
+    // Load search key from request
+    const { key } = req.body
 
     if (!user) {
         return res.status(400).json({ message: 'User ID required' })
@@ -189,11 +195,11 @@ const getApplicationByUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Get application by Project ID
-// @route GET /applications/project
+// @route GET /applications/project/:project
 // @access Private
 const getApplicationByProject = asyncHandler(async (req, res) => {
-    // Load project ID from request
-    const { project } = req.body
+    // Load project ID from parameters
+    const { project } = req.params
 
     if (!project) {
         return res.status(400).json({ message: 'Project ID required' })
@@ -213,11 +219,11 @@ const getApplicationByProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Get application by both User and Project ID
-// @route GET /applications/user/project
+// @route GET /applications/user/:user/project/:project
 // @access Private
 const getApplicationByUserAndProject = asyncHandler(async (req, res) => {
-    // Load IDs from request
-    const { user, project } = req.body
+    // Load IDs from parameters
+    const { user, project } = req.params
 
     if (!user || !project) {
         return res.status(400).json({ message: 'All fields required' })

@@ -10,6 +10,7 @@ const SearchBar = ({ currKey, currLocation, currCategory }) => {
 
     const handleSearch = () => {
         setSearchParams({ key })
+        window.location.reload()
     }
 
     return (
