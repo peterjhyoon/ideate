@@ -1,2 +1,2 @@
-# Ideafy
+# Ideate
 Linkedin for Projects
