@@ -1,4 +1,3 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
 import { apiSlice } from '../../app/api/apiSlice';
 
 // const projectsAdapter = createEntityAdapter({});
@@ -8,9 +7,8 @@ import { apiSlice } from '../../app/api/apiSlice';
 export const projectsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         searchProjects: builder.query({
-            query: ({ key, location, category }) => ({
-                url: '/projects/search',
-                body: { key, location, category},
+            query: (projectSearchData) => ({
+                url: `/projects/search?key=${projectSearchData?.key ? projectSearchData?.key : ""}&location=${projectSearchData?.location ? projectSearchData?.location : ""}&category=${projectSearchData?.category ? projectSearchData?.category : ""}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 }, 
@@ -37,8 +35,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         getProject: builder.query({
             query: ({ id }) => ({
-                url: '/projects/id',
-                body: { id },
+                url: `projects/id/${id ? id : ""}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 & !result.isError;
                 }
@@ -56,8 +53,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             // }
         }),
         addNewProject: builder.mutation({
-            query: initialProjectData => ({
-                url: '/projects',
+            query: ({ id, ...initialProjectData }) => ({
+                url: `projects/id/${id ? id : ""}`,
                 method: 'POST',
                 body: {
                     ...initialProjectData
@@ -65,29 +62,29 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: 'LIST' }
-            // ];
+            // ]
         }),
         updateProject: builder.mutation({
-            query: initialProjectData => ({
-                url: '/projects/id',
+            query: ({ id, ...updateProjectData }) => ({
+                url: `projects/id/${id ? id : ""}`,
                 method: 'PATCH',
                 body: {
-                    ...initialProjectData
+                    ...updateProjectData
                 }
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }
-            // ];
+            // ]
         }),
         deleteProject: builder.mutation({
             query: ({ id }) => ({
-                url: '/projects/id',
+                url: `projects/id/${id ? id : ""}`,
                 method: 'DELETE',
                 body: { id }
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }
-            // ];
+            // ]
         })
     })
 })
