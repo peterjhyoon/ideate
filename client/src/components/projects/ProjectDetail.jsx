@@ -9,6 +9,6 @@ const ProjectDetail = ({ project }) => {
             <p><strong>Description:</strong> {project.description}</p>
         </div>
     )
-}
+};
 
 export default ProjectDetail;

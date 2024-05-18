@@ -1,7 +1,7 @@
 // Would lead to Signup Page
 import AccButton from "./AccButtons";
 
-function CreateAcc() {
+const SignUpComponent = () => {
     return (
         <div className="bg-purple-700 container mx-auto text-center text-white flex flex-col justify-center h-screen">
             <h1 className="mb-10 text-4xl font-bold">New to Ideate?</h1>
@@ -11,7 +11,7 @@ function CreateAcc() {
                 styleConfig={"bg-white text-black hover:bg-purple-300"}
             />
         </div>
-    )
+    );
 }
 
-export default CreateAcc;
+export default SignUpComponent;

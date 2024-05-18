@@ -51,11 +51,11 @@ const createNewUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Get user by ID
-// @route GET /users/id
+// @route GET /users/id/:id
 // @access Private
 const getUser = asyncHandler(async (req, res) => {
-    // Load ID from request
-    const { id } = req.body
+    // Load ID from parameter
+    const { id } = req.params
     
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
@@ -71,11 +71,14 @@ const getUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Update a user
-// @route PATCH /users/id
+// @route PATCH /users/id/:id
 // @access Private
 const updateUser = asyncHandler(async (req, res) => {
+    // Load ID from parameters
+    const { id } = req.params
+
     // Load data from request
-    const { id, email, password, profilePicture, firstName, lastName, university} = req.body
+    const {email, password, profilePicture, firstName, lastName, university} = req.body
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
@@ -128,11 +131,11 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 // @desc Delete a user
-// @route DELETE /users/id
+// @route DELETE /users/id/:id
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {
-    // Load ID from request
-    const { id } = req.body
+    // Load ID from parameters
+    const { id } = req.params
 
     if (!id) {
         return res.status(400).json({ message: 'User ID required' })
