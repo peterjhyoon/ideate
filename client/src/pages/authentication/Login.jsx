@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom';
-import Login from "../components/user/Login";
-import CreateAcc from "../components/user/CreateAcc";
+import LoginComponent from '../../components/users/LoginComponent';
+import SignUpComponent from '../../components/users/SignUpComponent';
 
-function Accounts() {
+const Login = () => {
     return (
         <div className="flex flex-col lg:flex-row lg:h-screen w-full h-screen">
             <div className="lg:w-2/3 lg:h-screen w-full" id="login-comp">
-                <Login />
+                <LoginComponent />
             </div>
             <div className="lg:w-1/3 w-full h-screen" id="create-acc-comp">
-                <CreateAcc />
+                <SignUpComponent />
             </div>
         </div>
-    )
+    );
 }
 
-export default Accounts;
+export default Login;

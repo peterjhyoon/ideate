@@ -70,11 +70,11 @@ const createNewProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Get project by ID
-// @route GET /projects/id
+// @route GET /projects/id/:id
 // @access Private
 const getProject = asyncHandler(async (req, res) => {
     // Load ID from request
-    const { id } = req.body
+    const { id } = req.params
 
     const project = await Project.findById(id).populate({
         path: 'user',
@@ -93,11 +93,13 @@ const getProject = asyncHandler(async (req, res) => {
 })
 
 // @desc Update a project
-// @route PATCH /projects
+// @route PATCH /projects/id/:id
 // @access Private
 const updateProject = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
     // Load data from request
-    const { id, name, logo, user, location, category, description } = req.body
+    const { name, logo, user, location, category, description } = req.body
 
     if (!id) {
         return res.status(400).json({ message: 'Project ID required' })
@@ -154,7 +156,7 @@ const updateProject = asyncHandler(async (req, res) => {
 // @access Private
 const deleteProject = asyncHandler(async (req, res) => {
     // Load ID from request
-    const { id } = req.body
+    const { id } = req.params
 
     if (!id) {
         res.status(400).json({ message: 'Project ID required' })
@@ -185,7 +187,7 @@ const deleteProject = asyncHandler(async (req, res) => {
 // @access Private
 const getSearchProject = asyncHandler(async (req, res) => {
     // Load data from request
-    const { key, location, category } = req.body
+    const { key, location, category } = req.query
 
     // Create a pipeline for queries
     const pipeline = []
@@ -233,8 +235,14 @@ const getSearchProject = asyncHandler(async (req, res) => {
         })
     }
 
-    // Aggregate the pipeline to run the queries
-    const projects = await Project.aggregate(pipeline)
+    let projects
+    if (pipeline.length == 0) {
+        projects = await Project.find().lean().exec()
+    }
+    else {
+        // Aggregate the pipeline to run the queries
+        projects = await Project.aggregate(pipeline)
+    }
 
     if (!projects?.length) {
         return res.status(404).json({ message: 'No projects found' })

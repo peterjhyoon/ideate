@@ -6,7 +6,7 @@ router.route('/')
     .get(projectsController.getAllProjects) // Mainly for testing
     .post(projectsController.createNewProject)
 
-router.route('/id')
+router.route('/id/:id')
     .get(projectsController.getProject) // Access information of a specific project
     .patch(projectsController.updateProject)
     .delete(projectsController.deleteProject)
