@@ -22,6 +22,7 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
     const [password, setPassword] = useState("");
     const [validPassword, setValidPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [imageUrl, setImageUrl] = useState();
 
     const location = useLocation();
     const currentPath = location.pathname;
@@ -58,6 +59,10 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
         setLastName("")
     }, [navigate])
 
+    useEffect(() => {
+        setImageUrl(profilePicture ? URL.createObjectURL(profilePicture) : defaultProfilePicture)
+    }, [profilePicture])
+
     const canSignUp = [validEmail, validPassword, validFirstName, validLastName].every(Boolean);
 
     if (currentPath.startsWith("/signup")) {
@@ -90,7 +95,7 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
                     >
                         <img 
                             className="rounded-full h-full w-full"
-                            src={profilePicture ? URL.createObjectURL(profilePicture) : defaultProfilePicture}
+                            src={imageUrl}
                             alt="Profile"
                         />
                     </button>

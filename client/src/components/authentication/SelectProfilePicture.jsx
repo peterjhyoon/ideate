@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AuthButton from "../ui/AuthButton";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
@@ -6,10 +6,14 @@ import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png
 
 const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) => {
     const [currentProfilePicture, setCurrentProfilePicture] = useState(profilePicture)
-    const [crop, setCrop] = useState({
-    })
+    const [imageUrl, setImageUrl] = useState();
+    const [crop, setCrop] = useState({})
 
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        setImageUrl(currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture)
+    }, [currentProfilePicture])
 
     const onSaveClicked = () => {
         // TODO: crop the profile picture
@@ -71,6 +75,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                 <div className="bg-gray-300 h-96 flex justify-between items-center">
                     <ReactCrop 
                         crop={crop}
+                        onChange={(pixelCrop, percentCrop) => setCrop(pixelCrop)}
                         circularCrop
                         keepSelection
                         aspect={1}
@@ -80,7 +85,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                     >
                         <img 
                             className="mx-auto h-96 "
-                            src={currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture}
+                            src={imageUrl}
                             alt="Profile"
                             onLoad={onImageLoad} 
                         />
@@ -95,7 +100,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                         />
                     </div>
                     <div>
-                        <input type="file" id="fileInput" ref={fileInputRef} className="hidden" onChange={onFileChanged} />
+                        <input type="file" id="fileInput" ref={fileInputRef} className="hidden" onChange={onFileChanged} accept="image/*" />
                         <AuthButton 
                             buttonText={"Upload"} 
                             styleConfig={"bg-purple-700 hover:bg-purple-300 text-white"}
