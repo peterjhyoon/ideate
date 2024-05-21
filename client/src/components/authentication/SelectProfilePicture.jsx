@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import AuthButton from "../ui/AuthButton";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from "react-image-crop";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 
@@ -10,15 +10,76 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
     const [crop, setCrop] = useState({})
 
     const fileInputRef = useRef(null);
+    const canvasRef = useRef(null);
+    const imageRef = useRef(null);
 
     useEffect(() => {
-        setImageUrl(currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture)
+        setImageUrl(currentProfilePicture ? URL.createObjectURL(new File([currentProfilePicture], "profile_picture.png")) : defaultProfilePicture)
     }, [currentProfilePicture])
 
     const onSaveClicked = () => {
         // TODO: crop the profile picture
-        setProfilePicture(currentProfilePicture);
-        onClose();
+        if (defaultProfilePicture) {
+            const image = imageRef.current;
+            const canvas = canvasRef.current;
+
+            const context = canvas.getContext("2d");
+            if (!context) {
+                console.log("Error");
+            }
+
+            const pixelCrop = convertToPixelCrop(crop, image.width, image.height);
+
+            const pixelRatio = window.devicePixelRatio;
+            const scaleX = image.naturalWidth / image.width;
+            const scaleY = image.naturalHeight / image.height;
+
+            canvas.width = Math.floor(pixelCrop.width * scaleX * pixelRatio)
+            canvas.height = Math.floor(pixelCrop.height * scaleY * pixelRatio)
+
+            context.scale(pixelRatio, pixelRatio);
+            context.imageSmoothQuality = "high"
+            context.save();
+
+            const cropX = pixelCrop.x * scaleX;
+            const cropY = pixelCrop.y * scaleY;
+
+            context.translate(-cropX, -cropY);
+            context.drawImage(
+                image,
+                0,
+                0,
+                image.naturalWidth,
+                image.naturalHeight,
+                0,
+                0,
+                image.naturalWidth,
+                image.naturalHeight
+            );
+
+            context.restore();
+
+            const dataUrl = canvas.toDataURL();
+
+            const blob = dataURLToBlob(dataUrl);
+
+            setProfilePicture(blob);
+        }
+
+        // setProfilePicture(currentProfilePicture);
+        // onClose();
+    }
+
+    // Helper function to convert data URL to Blob
+    const dataURLToBlob = (dataUrl) => {
+        const byteString = atob(dataUrl.split(',')[1]);
+        const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
     }
 
     const onUploadClicked = () => {
@@ -35,8 +96,8 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
             const {width, height} = e.currentTarget;
             const crop = makeAspectCrop(
                 {
-                    unit: "px",
-                    width: 150,
+                    unit: "%",
+                    width: 50,
                 },
                 1,
                 width,
@@ -72,10 +133,10 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                         </svg>
                     </button>
                 </div>
-                <div className="bg-gray-300 h-96 flex justify-between items-center">
+                <div className="bg-gray-300 h-96 w-full flex justify-between items-center">
                     <ReactCrop 
                         crop={crop}
-                        onChange={(pixelCrop, percentCrop) => setCrop(pixelCrop)}
+                        onChange={(pixelCrop, percentCrop) => setCrop(percentCrop)}
                         circularCrop
                         keepSelection
                         aspect={1}
@@ -88,6 +149,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                             src={imageUrl}
                             alt="Profile"
                             onLoad={onImageLoad} 
+                            ref={imageRef}
                         />
                     </ReactCrop>
                 </div>
@@ -109,9 +171,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                     </div>
                 </div>
             </div>
-            <script>
-                
-            </script>
+            <canvas ref={canvasRef} hidden/>
         </div>
     )
 }

@@ -60,7 +60,7 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
     }, [navigate])
 
     useEffect(() => {
-        setImageUrl(profilePicture ? URL.createObjectURL(profilePicture) : defaultProfilePicture)
+        setImageUrl(profilePicture ? URL.createObjectURL(new File([profilePicture], "profile_picture.png")) : defaultProfilePicture)
     }, [profilePicture])
 
     const canSignUp = [validEmail, validPassword, validFirstName, validLastName].every(Boolean);
