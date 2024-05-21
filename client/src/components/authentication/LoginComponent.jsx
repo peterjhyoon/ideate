@@ -47,17 +47,19 @@ const LoginComponent = () => {
                         placeholder={"Email"}
                         onChange={onEmailChanged}
                         value={email}
+                        type={"text"}
                         styleConfig={"bg-purple-200 my-5"}
                     />
                     <AuthInput id="password" 
                         placeholder={"Password"}
                         onChange={onPasswordChanged}
                         value={password}
+                        type={"password"}
                         styleConfig={"bg-purple-200 my-5"}
                     />
                     <div className="py-2" id="remember-me">
-                        <label htmlFor="">
-                            <input type="checkbox" name="" id="" />
+                        <label className="p-1">
+                        <input type="checkbox" name="" id="" className="mr-1" />
                             Remember Me
                         </label>
                     </div>

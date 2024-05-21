@@ -1,5 +1,6 @@
 // import logo from './logo.svg';
 import './App.css';
+import 'react-image-crop/dist/ReactCrop.css'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/ui/Layout'
 import Home from './pages/Home'

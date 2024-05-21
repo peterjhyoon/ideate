@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 import AuthButton from "../ui/AuthButton";
+import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 
 const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) => {
     const [currentProfilePicture, setCurrentProfilePicture] = useState(profilePicture)
+    const [crop, setCrop] = useState({
+    })
 
     const fileInputRef = useRef(null);
 
@@ -23,10 +26,26 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
             setCurrentProfilePicture(e.target.files[0]);
         }
     }
+    const onImageLoad = (e) => {
+        if (currentProfilePicture) {
+            const {width, height} = e.currentTarget;
+            const crop = makeAspectCrop(
+                {
+                    unit: "px",
+                    width: 150,
+                },
+                1,
+                width,
+                height
+            )
+            const centeredCrop = centerCrop(crop, width, height);
+            setCrop(centeredCrop);
+        }
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-            <div className="bg-white rounded-3xl overflow-hidden transform transition-all lg:h-2/3 lg:w-1/2 sm:h-1/2 sm:w-2/3">
+            <div className="bg-white rounded-3xl overflow-hidden transform transition-all h-[34rem] w-[40rem]">
                 <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <p className="text-2xl leading-6 font-medium">Profile Picture</p>
                     <button
@@ -49,14 +68,25 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
                         </svg>
                     </button>
                 </div>
-                <div className="bg-gray-300 h-2/3 flex justify-between items-center">
-                    <img 
-                        className="h-full mx-auto"
-                        src={currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture}
-                        alt="Profile"
-                    />
+                <div className="bg-gray-300 h-96 flex justify-between items-center">
+                    <ReactCrop 
+                        crop={crop}
+                        circularCrop
+                        keepSelection
+                        aspect={1}
+                        minWidth={150}
+                        className="h-96 mx-auto"
+                        disabled={!currentProfilePicture}
+                    >
+                        <img 
+                            className="mx-auto h-96 "
+                            src={currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture}
+                            alt="Profile"
+                            onLoad={onImageLoad} 
+                        />
+                    </ReactCrop>
                 </div>
-                <div className="flex flex-column flex-grow justify-center items-center space-x-20 sm:pt-4 lg:pt-12">
+                <div className="flex flex-column flex-grow justify-center items-center space-x-20 pt-2">
                     <div>
                         <AuthButton 
                             buttonText={"Save"} 

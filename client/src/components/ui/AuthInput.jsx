@@ -1,8 +1,8 @@
-const AuthInput = ({ placeholder, onChange, value, styleConfig }) => {
+const AuthInput = ({ type, placeholder, onChange, value, styleConfig }) => {
     return (
         <div className="flex items-center">
             <input
-                type="text"
+                type={type}
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}

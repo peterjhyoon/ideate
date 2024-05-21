@@ -82,7 +82,7 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
         
         return (
             <div className="bg-purple-700 container mx-auto text-center flex flex-col justify-center h-screen">
-                <h1 className="text-white text-4xl pb-10 font-bold mx-auto">Register for a New Account</h1>
+                <h1 className="text-white text-4xl pb-10 font-bold mx-auto">Sign Up for a New Account</h1>
                 <div className="flex flex-column justify-content-center align-items-center mb-5">
                     <button 
                         className="w-28 h-28 mx-auto rounded-full border-4 border-purple-700 hover:border-blue-300"
@@ -100,36 +100,42 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
                         placeholder={"Email"}
                         onChange={onEmailChanged}
                         value={email}
+                        type={"text"}
                         styleConfig={inputClass}
                     />
                     <AuthInput id="firstName" 
                         placeholder={"First Name"}
                         onChange={onFirstNameChanged}
                         value={firstName}
+                        type={"text"}
                         styleConfig={inputClass}
                     />
                     <AuthInput id="lastName" 
                         placeholder={"Last Name"}
                         onChange={onLastNameChanged}
                         value={lastName}
+                        type={"text"}
                         styleConfig={inputClass}
                     />
                     <AuthInput id="university" 
                         placeholder={"University (Optional)"}
                         onChange={onUniversityChanged}
                         value={university}
+                        type={"text"}
                         styleConfig={inputClass}
                     />
                     <AuthInput id="password" 
                         placeholder={"Password"}
                         onChange={onPasswordChanged}
                         value={password}
+                        type={"password"}
                         styleConfig={inputClass}
                     />
                     <AuthInput id="confirmPassword" 
                         placeholder={"Confirm Password"}
                         onChange={onConfirmPasswordChanged}
                         value={confirmPassword}
+                        type={"password"}
                         styleConfig={inputClass}
                     />
                     <AuthButton 
