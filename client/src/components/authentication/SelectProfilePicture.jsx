@@ -14,7 +14,7 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
     const imageRef = useRef(null);
 
     useEffect(() => {
-        setImageUrl(currentProfilePicture ? URL.createObjectURL(new File([currentProfilePicture], "profile_picture.png")) : defaultProfilePicture)
+        setImageUrl(currentProfilePicture ? URL.createObjectURL(currentProfilePicture) : defaultProfilePicture)
     }, [currentProfilePicture])
 
     const onSaveClicked = () => {
@@ -63,11 +63,10 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
 
             const blob = dataURLToBlob(dataUrl);
 
-            setProfilePicture(blob);
+            setProfilePicture(new File([blob], "profile_picture.png"));
         }
 
-        // setProfilePicture(currentProfilePicture);
-        // onClose();
+        onClose();
     }
 
     // Helper function to convert data URL to Blob

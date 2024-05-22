@@ -1,14 +1,16 @@
 // Would lead to Signup Page
 import AuthButton from "../ui/AuthButton";
 import AuthInput from "../ui/AuthInput";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Password must have a lowercase character, an uppercase character, a special character, a digit, and at least 8 characters
-const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+// const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 const NAME_REGEX = /^[a-zA-Z]+$/
+
+const MARGIN = "mb-8"
 
 
 const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
@@ -24,6 +26,17 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [imageUrl, setImageUrl] = useState();
 
+    const [emailClass, setEmailClass] = useState(MARGIN);
+    const [passwordClass, setPasswordClass] = useState(MARGIN);
+    const [confirmPasswordClass, setConfirmPasswordClass] = useState(MARGIN);
+    const [firstNameClass, setFirstNameClass] = useState(MARGIN);
+    const [lastNameClass, setLastNameClass] = useState(MARGIN);
+
+    const emailErrMsg = useRef();
+    const passwordErrMsg = useRef();
+    const firstNameErrMsg = useRef();
+    const lastNameErrMsg = useRef();
+
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -37,58 +50,131 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
 
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email));
+        emailErrMsg.current.style.display = "none";
+        emailErrMsg.current.textContent = "";
     }, [email])
 
     useEffect(() => {
-        setValidPassword(PASSWORD_REGEX.test(password) && password === confirmPassword);
+        setValidPassword(password.length >= 8 && password === confirmPassword);
+        passwordErrMsg.current.style.display = "none";
+        passwordErrMsg.current.textContent = "";
     }, [password, confirmPassword])
 
     useEffect(() => {
         setValidFirstName(NAME_REGEX.test(firstName));
+        firstNameErrMsg.current.style.display = "none";
+        firstNameErrMsg.current.textContent = "";
     }, [firstName])
 
     useEffect(() => {
         setValidLastName(NAME_REGEX.test(lastName));
+        lastNameErrMsg.current.style.display = "none";
+        lastNameErrMsg.current.textContent = "";
     }, [lastName])
 
     useEffect(() => {
-        setEmail("")
-        setPassword("")
-        setConfirmPassword("")
-        setFirstName("")
-        setLastName("")
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setUniversity("");
+        setFirstName("");
+        setLastName("");
+
+        setEmailClass(MARGIN);
+        setPasswordClass(MARGIN);
+        setConfirmPasswordClass(MARGIN)
+        setFirstNameClass(MARGIN);
+        setLastNameClass(MARGIN);
     }, [navigate])
 
     useEffect(() => {
-        setImageUrl(profilePicture ? URL.createObjectURL(new File([profilePicture], "profile_picture.png")) : defaultProfilePicture)
+        setImageUrl(profilePicture ? URL.createObjectURL(profilePicture) : defaultProfilePicture)
     }, [profilePicture])
 
     const canSignUp = [validEmail, validPassword, validFirstName, validLastName].every(Boolean);
 
     if (currentPath.startsWith("/signup")) {
-        const onEmailChanged = e => setEmail(e.target.value);
-        const onPasswordChanged = e => setPassword(e.target.value);
-        const onConfirmPasswordChanged = e => setConfirmPassword(e.target.value);
-        const onFirstNameChanged = e => setFirstName(e.target.value);
-        const onLastNameChanged = e => setLastName(e.target.value);
+        const onEmailChanged = e => {
+            setEmail(e.target.value);
+            setEmailClass(MARGIN);
+        }
+
+        const onPasswordChanged = e => {
+            setPassword(e.target.value);
+            setPasswordClass(MARGIN);
+        }
+
+        const onConfirmPasswordChanged = e => {
+            setConfirmPassword(e.target.value);
+            setPasswordClass(MARGIN);
+            setConfirmPasswordClass(MARGIN)
+        }
+
+        const onFirstNameChanged = e => {
+            setFirstName(e.target.value);
+            setFirstNameClass(MARGIN);
+        }
+
+        const onLastNameChanged = e => {
+            setLastName(e.target.value);
+            setLastNameClass(MARGIN);
+        }
+
         const onUniversityChanged = e => setUniversity(e.target.value);
 
         const handleSubmit = async (e) => {
             e.preventDefault();
+            console.log(validEmail);
             if (canSignUp) {
                 // TODO: create account in backend
                 navigate(`/login?redirect=${redirect}`)
             } else {
-                // TODO: display error message
+                if (!validEmail) {
+                    setEmailClass("mb-none outline outline-2 outline-red-500");
+                    emailErrMsg.current.style.display = "block";
+                    if (email.length === 0) {
+                        emailErrMsg.current.textContent = "Please enter your email address.";
+                    } else {
+                        emailErrMsg.current.textContent = "Please a valid email address.";
+                    }
+                }
+                if (!validFirstName) {
+                    setFirstNameClass("mb-none outline outline-2 outline-red-500");
+                    firstNameErrMsg.current.style.display = "block";
+                    if (firstName.length === 0) {
+                        firstNameErrMsg.current.textContent = "Please enter your first name.";
+                    } else {
+                        firstNameErrMsg.current.textContent = "First name must only contain letters.";
+                    }
+                }
+                if (!validLastName) {
+                    setLastNameClass("mb-none outline outline-2 outline-red-500");
+                    lastNameErrMsg.current.style.display = "block";
+                    if (lastName.length === 0) {
+                        lastNameErrMsg.current.textContent = "Please enter your last name.";
+                    } else {
+                        lastNameErrMsg.current.textContent = "Last name must only contain letters.";
+                    }
+                }
+                if (!validPassword) {
+                    setPasswordClass("mb-none outline outline-2 outline-red-500");
+                    setConfirmPasswordClass("mb-8 outline outline-2 outline-red-500");
+                    passwordErrMsg.current.style.display = "block";
+                    if (password.length === 0) {
+                        passwordErrMsg.current.textContent = "Please enter a password. ";
+                    } else if (password.length < 8) {
+                        passwordErrMsg.current.textContent = "Password must be at least 8 characters. ";
+                    } else if (password !== confirmPassword) {
+                        passwordErrMsg.current.textContent = "Passwords do not match. ";
+                    }
+                }
             }
         }
-
-        const inputClass = "my-3"
         
         return (
             <div className="bg-purple-700 container mx-auto text-center flex flex-col justify-center h-screen">
                 <h1 className="text-white text-4xl pb-10 font-bold mx-auto">Sign Up for a New Account</h1>
-                <div className="flex flex-column justify-content-center align-items-center mb-5">
+                <div className="flex flex-column justify-content-center align-items-center mb-8">
                     <button 
                         className="w-28 h-28 mx-auto rounded-full border-4 border-purple-700 hover:border-blue-300"
                         onClick={handleOpenEditor}
@@ -106,42 +192,46 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
                         onChange={onEmailChanged}
                         value={email}
                         type={"text"}
-                        styleConfig={inputClass}
+                        styleConfig={emailClass}
                     />
+                    <p className="text-red-500 mb-2 text-s" ref={emailErrMsg} />
                     <AuthInput id="firstName" 
                         placeholder={"First Name"}
                         onChange={onFirstNameChanged}
                         value={firstName}
                         type={"text"}
-                        styleConfig={inputClass}
+                        styleConfig={firstNameClass}
                     />
+                    <p className="text-red-500 mb-2 text-s" ref={firstNameErrMsg} />
                     <AuthInput id="lastName" 
                         placeholder={"Last Name"}
                         onChange={onLastNameChanged}
                         value={lastName}
                         type={"text"}
-                        styleConfig={inputClass}
+                        styleConfig={lastNameClass}
                     />
+                    <p className="text-red-500 mb-2 text-s" ref={lastNameErrMsg} />
                     <AuthInput id="university" 
                         placeholder={"University (Optional)"}
                         onChange={onUniversityChanged}
                         value={university}
                         type={"text"}
-                        styleConfig={inputClass}
+                        styleConfig={MARGIN}
                     />
                     <AuthInput id="password" 
                         placeholder={"Password"}
                         onChange={onPasswordChanged}
                         value={password}
                         type={"password"}
-                        styleConfig={inputClass}
+                        styleConfig={passwordClass}
                     />
+                    <p className="text-red-500 mb-2 text-s" ref={passwordErrMsg} />
                     <AuthInput id="confirmPassword" 
                         placeholder={"Confirm Password"}
                         onChange={onConfirmPasswordChanged}
                         value={confirmPassword}
                         type={"password"}
-                        styleConfig={inputClass}
+                        styleConfig={confirmPasswordClass}
                     />
                     <AuthButton 
                         buttonText={"Sign Up"}

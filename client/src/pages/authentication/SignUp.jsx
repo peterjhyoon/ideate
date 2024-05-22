@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const SignUp = () => {
     const [openEditor, setOpenEditor] = useState(false);
-    const [profilePicture, setProfilePicture] = useState(null); // blob datatype, can store in database? 
+    const [profilePicture, setProfilePicture] = useState(null); // file datatype only, store using gridfs
 
     const handleOpenEditor = (e) => setOpenEditor(true);
 
