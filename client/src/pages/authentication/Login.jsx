@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import LoginComponent from '../../components/users/LoginComponent';
-import SignUpComponent from '../../components/users/SignUpComponent';
+import LoginComponent from '../../components/authentication/LoginComponent';
+import SignUpComponent from '../../components/authentication/SignUpComponent';
 
 const Login = () => {
     return (
@@ -8,7 +8,7 @@ const Login = () => {
             <div className="lg:w-2/3 lg:h-screen w-full" id="login-comp">
                 <LoginComponent />
             </div>
-            <div className="lg:w-1/3 w-full h-screen" id="create-acc-comp">
+            <div className="lg:w-1/3 w-full h-screen" id="sign-up-comp">
                 <SignUpComponent />
             </div>
         </div>

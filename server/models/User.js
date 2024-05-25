@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
         },
         // Convert profile picture to binary map and then parse to string in client side
         profilePicture: {
-            type: String
+            type: Buffer
             // TODO: Add default profile picture
             // default: 
         },
