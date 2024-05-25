@@ -30,14 +30,17 @@ const SelectProfilePicture = ({ onClose, profilePicture, setProfilePicture }) =>
 
             const pixelCrop = convertToPixelCrop(crop, image.width, image.height);
 
-            const pixelRatio = window.devicePixelRatio;
+            // const pixelRatio = window.devicePixelRatio;
             const scaleX = image.naturalWidth / image.width;
             const scaleY = image.naturalHeight / image.height;
 
-            canvas.width = Math.floor(pixelCrop.width * scaleX * pixelRatio)
-            canvas.height = Math.floor(pixelCrop.height * scaleY * pixelRatio)
+            // canvas.width = Math.floor(pixelCrop.width * scaleX * pixelRatio)
+            // canvas.height = Math.floor(pixelCrop.height * scaleY * pixelRatio)
 
-            context.scale(pixelRatio, pixelRatio);
+            canvas.width = Math.floor(pixelCrop.width * scaleX)
+            canvas.height = Math.floor(pixelCrop.height * scaleY)
+
+            // context.scale(pixelRatio, pixelRatio);
             context.imageSmoothQuality = "high"
             context.save();
 

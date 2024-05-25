@@ -4,6 +4,7 @@ import AuthInput from "../ui/AuthInput";
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
+import { useAddNewUserMutation } from "../users/usersApiSlice";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Password must have a lowercase character, an uppercase character, a special character, a digit, and at least 8 characters
@@ -14,6 +15,13 @@ const MARGIN = "mb-8"
 
 
 const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
+    const [addNewUser, {
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    }] = useAddNewUserMutation()
+
     const [email, setEmail] = useState("");
     const [validEmail, setValidEmail] = useState(false);
     const [firstName, setFirstName] = useState("");
@@ -50,26 +58,34 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
 
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email));
-        emailErrMsg.current.style.display = "none";
-        emailErrMsg.current.textContent = "";
+        if (emailErrMsg?.current) {
+            emailErrMsg.current.style.display = "none";
+            emailErrMsg.current.textContent = "";
+        }
     }, [email])
 
     useEffect(() => {
         setValidPassword(password.length >= 8 && password === confirmPassword);
-        passwordErrMsg.current.style.display = "none";
-        passwordErrMsg.current.textContent = "";
+        if (passwordErrMsg?.current) {
+            passwordErrMsg.current.style.display = "none";
+            passwordErrMsg.current.textContent = "";
+        }
     }, [password, confirmPassword])
 
     useEffect(() => {
         setValidFirstName(NAME_REGEX.test(firstName));
-        firstNameErrMsg.current.style.display = "none";
-        firstNameErrMsg.current.textContent = "";
+        if (firstNameErrMsg?.current) {
+            firstNameErrMsg.current.style.display = "none";
+            firstNameErrMsg.current.textContent = "";
+        }
     }, [firstName])
 
     useEffect(() => {
         setValidLastName(NAME_REGEX.test(lastName));
-        lastNameErrMsg.current.style.display = "none";
-        lastNameErrMsg.current.textContent = "";
+        if (lastNameErrMsg?.current) {
+            lastNameErrMsg.current.style.display = "none";
+            lastNameErrMsg.current.textContent = "";
+        }
     }, [lastName])
 
     useEffect(() => {
@@ -85,7 +101,21 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
         setConfirmPasswordClass(MARGIN)
         setFirstNameClass(MARGIN);
         setLastNameClass(MARGIN);
-    }, [navigate])
+
+        if (isSuccess) {
+            navigate(`/login?redirect=${redirect}`)
+        }
+    }, [isSuccess, navigate, redirect])
+
+    useEffect(() => {
+        if (isError) {
+            if (error.status === 409) {
+                emailErrMsg.current.textContent = "User with this email already exists. ";
+            } else {
+                console.log("ERROR");
+            }
+        }
+    }, [isError, error])
 
     useEffect(() => {
         setImageUrl(profilePicture ? URL.createObjectURL(profilePicture) : defaultProfilePicture)
@@ -124,11 +154,18 @@ const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
 
         const handleSubmit = async (e) => {
             e.preventDefault();
-            console.log(validEmail);
             if (canSignUp) {
-                // TODO: create account in backend
-                navigate(`/login?redirect=${redirect}`)
-            } else {
+                let user = { email, firstName, lastName, password};
+                if (university) {
+                    user.university = university;
+                }
+                if (profilePicture) {
+                    user.profilePicture = profilePicture.buffer;
+                }
+
+                // Submit RTK query to create user
+                addNewUser(user);
+            } else { // Display error messages
                 if (!validEmail) {
                     setEmailClass("mb-none outline outline-2 outline-red-500");
                     emailErrMsg.current.style.display = "block";
