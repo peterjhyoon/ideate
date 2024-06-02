@@ -6,10 +6,10 @@ const asyncHandler = require('express-async-handler')
 // @access Private
 const getAllCategories = asyncHandler(async (req, res) => {
     // Fetch categories
-    const categories = Category.find().lean().exec()
+    const categories = await Category.find().lean().exec()
 
     if (!categories?.length) {
-        return res.status(400).json({ message: 'No categories found' })
+        return res.status(404).json({ message: 'No categories found' })
     }
 
     res.json(categories)
