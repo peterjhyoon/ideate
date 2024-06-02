@@ -1,27 +1,37 @@
-import { apiSlice } from '../../app/api/apiSlice';
+import { apiSlice } from "../../app/api/apiSlice";
 
 // const projectsAdapter = createEntityAdapter({});
 
 // const initialState = projectsAdapter.getInitialState();
 
 export const projectsApiSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
+    endpoints: (builder) => ({
         searchProjects: builder.query({
             query: (projectSearchData) => ({
-                url: `/projects/search?key=${projectSearchData?.key ? projectSearchData?.key : ""}&location=${projectSearchData?.location ? projectSearchData?.location : ""}&category=${projectSearchData?.category ? projectSearchData?.category : ""}`,
+                url: `/projects/search?key=${
+                    projectSearchData?.key ? projectSearchData?.key : ""
+                }&location=${
+                    projectSearchData?.location
+                        ? projectSearchData?.location
+                        : ""
+                }&category=${
+                    projectSearchData?.category
+                        ? projectSearchData?.category
+                        : ""
+                }`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
-                }, 
+                },
             }),
-            transformResponse: responseData => {
-                const loadedProjects = responseData.map(project => {
+            transformResponse: (responseData) => {
+                const loadedProjects = responseData.map((project) => {
                     project.id = project._id;
                     return project;
-                })
+                });
                 return loadedProjects;
             },
             // Mainly used for automatically refetching cached data
-            // Might be unnecessary? 
+            // Might be unnecessary?
             // providesTags: (result, error, arg) => {
             //     if (result?.ids) {
             //         return [
@@ -37,10 +47,10 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             query: ({ id }) => ({
                 url: `/projects/id/${id ? id : ""}`,
                 validateStatus: (response, result) => {
-                    return response.status === 200 & !result.isError;
-                }
+                    return (response.status === 200) & !result.isError;
+                },
             }),
-            transformResponse: responseData => {
+            transformResponse: (responseData) => {
                 responseData.id = responseData._id;
                 return responseData;
             },
@@ -53,12 +63,12 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             // }
         }),
         addNewProject: builder.mutation({
-            query: initialProjectData => ({
-                url: '/projects',
-                method: 'POST',
+            query: (initialProjectData) => ({
+                url: "/projects",
+                method: "POST",
                 body: {
-                    ...initialProjectData
-                }
+                    ...initialProjectData,
+                },
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: 'LIST' }
@@ -67,10 +77,10 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         updateProject: builder.mutation({
             query: ({ id, ...updateProjectData }) => ({
                 url: `/projects/id/${id ? id : ""}`,
-                method: 'PATCH',
+                method: "PATCH",
                 body: {
-                    ...updateProjectData
-                }
+                    ...updateProjectData,
+                },
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }
@@ -79,20 +89,20 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         deleteProject: builder.mutation({
             query: ({ id }) => ({
                 url: `/projects/id/${id ? id : ""}`,
-                method: 'DELETE',
-                body: { id }
+                method: "DELETE",
+                body: { id },
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }
             // ]
-        })
-    })
-})
+        }),
+    }),
+});
 
 export const {
     useSearchProjectsQuery,
     useGetProjectQuery,
     useAddNewProjectMutation,
     useUpdateProjectMutation,
-    useDeleteProjectMutation
+    useDeleteProjectMutation,
 } = projectsApiSlice;

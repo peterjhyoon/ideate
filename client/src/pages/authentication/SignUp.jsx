@@ -1,5 +1,5 @@
-import LoginComponent from '../../components/authentication/LoginComponent';
-import SignUpComponent from '../../components/authentication/SignUpComponent';
+import LoginComponent from "../../components/authentication/LoginComponent";
+import SignUpComponent from "../../components/authentication/SignUpComponent";
 import SelectProfilePicture from "../../components/authentication/SelectProfilePicture";
 import { useState } from "react";
 //import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png"
@@ -20,11 +20,22 @@ const SignUp = () => {
                 <LoginComponent />
             </div>
             <div className="lg:w-2/3 lg:h-screen w-full" id="sign-up-comp">
-                <SignUpComponent handleOpenEditor={handleOpenEditor} profilePicture={profilePicture}/>
+                <SignUpComponent
+                    handleOpenEditor={handleOpenEditor}
+                    profilePicture={profilePicture}
+                />
             </div>
-            {openEditor && <SelectProfilePicture onClose={() => {setOpenEditor(false)}} profilePicture={profilePicture} setProfilePicture={setProfilePicture}/>}
+            {openEditor && (
+                <SelectProfilePicture
+                    onClose={() => {
+                        setOpenEditor(false);
+                    }}
+                    profilePicture={profilePicture}
+                    setProfilePicture={setProfilePicture}
+                />
+            )}
         </div>
     );
-}
+};
 
 export default SignUp;

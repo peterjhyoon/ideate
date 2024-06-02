@@ -6,10 +6,10 @@ const asyncHandler = require('express-async-handler')
 // @access Private
 const getAllLocations = asyncHandler(async (req, res) => {
     // Fetch locations
-    const locations = Location.find().lean().exec()
+    const locations = await Location.find().lean().exec()
 
     if (!locations?.length) {
-        return res.status(400).json({ message: 'No locations found' })
+        return res.status(404).json({ message: 'No locations found' })
     }
 
     res.json(locations)

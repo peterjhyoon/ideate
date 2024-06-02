@@ -16,7 +16,6 @@ const MARGIN = "mb-8"
 
 const SignUpComponent = ({ handleOpenEditor, profilePicture }) => {
     const [addNewUser, {
-        isLoading,
         isSuccess,
         isError,
         error
