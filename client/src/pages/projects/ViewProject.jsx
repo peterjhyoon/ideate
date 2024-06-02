@@ -26,14 +26,18 @@ const ViewProject = () => {
     const [imageSrc, setImageSrc] = useState(defaultProjectLogo);
 
     if (project?.logo) {
-        console.log("hello")
-        const blob = new Blob([project.logo], { type: 'image/png' });
+        console.log("hello");
+        const blob = new Blob([project.logo], { type: "image/png" });
         const imageUrl = URL.createObjectURL(blob);
         setImageSrc(imageUrl);
     }
 
     const onClose = () => {
-        navigate(`/projects?key=${keyParam ? keyParam : ''}&location=${locationParam ? locationParam : ''}&category=${categoryParam ? categoryParam : ''}`);
+        navigate(
+            `/projects?key=${keyParam ? keyParam : ""}&location=${
+                locationParam ? locationParam : ""
+            }&category=${categoryParam ? categoryParam : ""}`
+        );
     };
 
     const onApply = () => {

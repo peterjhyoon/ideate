@@ -9,14 +9,14 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         searchProjects: builder.query({
             query: (projectSearchData) => ({
                 url: `/projects/search?key=${
-                    projectSearchData?.key ? projectSearchData?.key : ""
+                    projectSearchData?.key ? projectSearchData.key : ""
                 }&location=${
                     projectSearchData?.location
-                        ? projectSearchData?.location
+                        ? projectSearchData.location
                         : ""
                 }&category=${
                     projectSearchData?.category
-                        ? projectSearchData?.category
+                        ? projectSearchData.category
                         : ""
                 }`,
                 validateStatus: (response, result) => {

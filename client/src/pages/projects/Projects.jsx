@@ -65,7 +65,9 @@ const Projects = () => {
                     let imageSrc = defaultProjectLogo;
 
                     if (project.logo) {
-                        const blob = new Blob([project.logo], { type: 'image/png' });
+                        const blob = new Blob([project.logo], {
+                            type: "image/png",
+                        });
                         imageSrc = URL.createObjectURL(blob);
                     }
 
@@ -74,7 +76,13 @@ const Projects = () => {
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
                             onClick={() =>
                                 navigate(
-                                    `/projects/${project.id}?key=${keyParam ? keyParam : ''}&location=${locationParam ? locationParam : ''}&category=${categoryParam ? categoryParam : ''}`
+                                    `/projects/${project.id}?key=${
+                                        keyParam ? keyParam : ""
+                                    }&location=${
+                                        locationParam ? locationParam : ""
+                                    }&category=${
+                                        categoryParam ? categoryParam : ""
+                                    }`
                                 )
                             }
                             key={key}
