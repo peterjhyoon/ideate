@@ -10,11 +10,11 @@ const ViewProject = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const queryParams = new URLSearchParams(location.search);
-    let redirect = queryParams.get("redirect");
-    if (!redirect) {
-        redirect = "/projects";
-    }
+    const searchParams = new URLSearchParams(location.search);
+
+    const keyParam = searchParams.get("key");
+    const locationParam = searchParams.get("location");
+    const categoryParam = searchParams.get("category");
 
     const {
         data: project,
@@ -23,10 +23,17 @@ const ViewProject = () => {
         isError,
     } = useGetProjectQuery({ id });
 
-    const [imageUrl, setImageUrl] = useState(defaultProjectLogo);
+    const [imageSrc, setImageSrc] = useState(defaultProjectLogo);
+
+    if (project?.logo) {
+        console.log("hello")
+        const blob = new Blob([project.logo], { type: 'image/png' });
+        const imageUrl = URL.createObjectURL(blob);
+        setImageSrc(imageUrl);
+    }
 
     const onClose = () => {
-        navigate(redirect);
+        navigate(`/projects?key=${keyParam ? keyParam : ''}&location=${locationParam ? locationParam : ''}&category=${categoryParam ? categoryParam : ''}`);
     };
 
     const onApply = () => {
@@ -79,7 +86,7 @@ const ViewProject = () => {
 
                 <img
                     className=" h-20 w-20 flex-shrink-0 mr-7 absolute top-8 left-16 rounded-full border border-black"
-                    src={imageUrl}
+                    src={imageSrc}
                     alt="Project"
                 />
 

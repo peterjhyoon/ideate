@@ -11,18 +11,19 @@ import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
 const Projects = () => {
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const [imageUrl, setImageUrl] = useState(defaultProjectLogo);
+    const keyParam = searchParams.get("key");
+    const locationParam = searchParams.get("location");
+    const categoryParam = searchParams.get("category");
 
     const {
         data: projects,
         isLoading,
         isSuccess,
         isError,
-        error,
     } = useSearchProjectsQuery({
-        key: searchParams.get("key"),
-        location: searchParams.get("location"),
-        category: searchParams.get("category"),
+        key: keyParam,
+        location: locationParam,
+        category: categoryParam,
     });
 
     const navigate = useNavigate();
@@ -60,38 +61,48 @@ const Projects = () => {
                 id="proj-list"
             >
                 {/* TODO: Style scrollbar */}
-                {projects.map((project) => (
-                    <div
-                        className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
-                        onClick={() =>
-                            navigate(
-                                `/projects/${project.id}?redirect=${currentPath}`
-                            )
-                        }
-                    >
-                        <img
-                            className=" h-20 flex-shrink-0 mr-7 rounded-md"
-                            src={imageUrl}
-                            alt="Project"
-                        />
-                        <div>
-                            <h2 className="text-xl font-bold">
-                                {project.name}
-                            </h2>
-                            <p
-                                className="text-slate-500"
-                                id="textContainer"
-                            >{`${project.location.state}, ${project.location.country}`}</p>
-                            <p
-                                className="line-clamp-1 break-word"
-                                id="textContainer"
-                            >
-                                {project.description}
-                            </p>
-                            <hr className="mt-5 mx-auto" />
+                {projects.map((project, key) => {
+                    let imageSrc = defaultProjectLogo;
+
+                    if (project.logo) {
+                        const blob = new Blob([project.logo], { type: 'image/png' });
+                        imageSrc = URL.createObjectURL(blob);
+                    }
+
+                    return (
+                        <div
+                            className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
+                            onClick={() =>
+                                navigate(
+                                    `/projects/${project.id}?key=${keyParam ? keyParam : ''}&location=${locationParam ? locationParam : ''}&category=${categoryParam ? categoryParam : ''}`
+                                )
+                            }
+                            key={key}
+                        >
+                            <img
+                                className=" h-20 flex-shrink-0 mr-7 rounded-md"
+                                src={imageSrc}
+                                alt="Project"
+                            />
+                            <div>
+                                <h2 className="text-xl font-bold">
+                                    {project.name}
+                                </h2>
+                                <p
+                                    className="text-slate-500"
+                                    id="textContainer"
+                                >{`${project.location.state}, ${project.location.country}`}</p>
+                                <p
+                                    className="line-clamp-1 break-word"
+                                    id="textContainer"
+                                >
+                                    {project.description}
+                                </p>
+                                <hr className="mt-5 mx-auto" />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
                 <button
                     className="z-10 rounded-full bg-purple-700 w-16 h-16 absolute bottom-20 right-20 hover:bg-purple-500"
                     onClick={onAdd}
