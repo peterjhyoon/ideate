@@ -9,7 +9,8 @@ import SignUp from './pages/authentication/SignUp';
 import Projects from './pages/projects/Projects';
 import ViewProject from './pages/projects/ViewProject';
 import ViewUser from './pages/users/ViewUser';
-import NotFound from './pages/NotFound'
+import NotFound from './pages/NotFound';
+import ProjectsLayout from './components/projects/ProjectsLayout';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
           <Route path="signup" element={<SignUp />} />
 
           {/* Project Routes */}
-          <Route path="projects">
+          <Route path="projects" element={<ProjectsLayout />}>
             <Route index element={<Projects />} />
             <Route path=":id" element={<ViewProject />} />
             {/* <Route path="new" element={ } /> */}

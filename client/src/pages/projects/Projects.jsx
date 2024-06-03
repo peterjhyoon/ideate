@@ -1,11 +1,10 @@
 import SearchBar from "../../components/ui/SearchBar";
 import { useSearchProjectsQuery } from "../../components/projects/projectsApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
 
 const Projects = () => {
@@ -27,9 +26,6 @@ const Projects = () => {
     });
 
     const navigate = useNavigate();
-
-    const location = useLocation();
-    const currentPath = location.pathname;
 
     const onAdd = () => {
         // TODO: Open modal for adding project
@@ -125,19 +121,14 @@ const Projects = () => {
     }
 
     return (
-        <div className="w-full pt-14 bg-gray-200 flex-grow flex flex-col justify-center">
-            <div
-                className="lg:w-2/3 container bg-white border border-black rounded-[40px] py-5 my-5 mx-auto my-auto relative"
-                style={{ height: "70vh" }}
-            >
-                <SearchBar
-                    currKey={searchParams?.key}
-                    currLocation={searchParams?.location}
-                    currCategory={searchParams?.category}
-                />
-                <hr className="mt-5 w-5/6 mx-auto" />
-                {content}
-            </div>
+        <div className="py-5">
+            <SearchBar
+                currKey={searchParams?.key}
+                currLocation={searchParams?.location}
+                currCategory={searchParams?.category}
+            />
+            <hr className="mt-5 w-5/6 mx-auto" />
+            {content}
         </div>
     );
 };
