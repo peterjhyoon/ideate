@@ -1,6 +1,6 @@
-import { Outlet } from "react-router-dom"
-import Header from "./Header"
-import Footer from "./Footer"
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
+import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
 
 const Layout = () => {
@@ -13,16 +13,15 @@ const Layout = () => {
                 <Header />
                 <Outlet />
             </>
-        )
-    }
-    else {
+        );
+    } else {
         return (
             <>
                 <Header />
                 <Outlet />
                 <Footer />
             </>
-        )
+        );
     }
-}
-export default Layout
+};
+export default Layout;

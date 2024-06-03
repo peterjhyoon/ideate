@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import LoginComponent from '../../components/authentication/LoginComponent';
-import SignUpComponent from '../../components/authentication/SignUpComponent';
+import { Link } from "react-router-dom";
+import LoginComponent from "../../components/authentication/LoginComponent";
+import SignUpComponent from "../../components/authentication/SignUpComponent";
 
 const Login = () => {
     return (
@@ -13,6 +13,6 @@ const Login = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Login;

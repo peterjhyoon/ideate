@@ -9,7 +9,7 @@ const AuthInput = ({ type, placeholder, onChange, value, styleConfig }) => {
                 className={`text-black mx-auto rounded-full py-2 px-4 w-80 focus:outline-blue-300 ${styleConfig}`}
             />
         </div>
-    )
-}
+    );
+};
 
 export default AuthInput;

@@ -5,7 +5,7 @@ const Footer = () => {
                 <p>&copy; 2024 Ideate. All rights reserved.</p>
             </div>
         </footer>
-    )
-}
+    );
+};
 
 export default Footer;
