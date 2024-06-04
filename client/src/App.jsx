@@ -11,6 +11,7 @@ import ViewProject from "./pages/projects/ViewProject";
 import ViewUser from "./pages/users/ViewUser";
 import NotFound from "./pages/NotFound";
 import ProjectsLayout from "./components/projects/ProjectsLayout";
+import UsersLayout from "./components/users/UsersLayout";
 
 function App() {
     return (
@@ -32,7 +33,7 @@ function App() {
                     </Route>
 
                     {/* User Routes */}
-                    <Route path="user/:id">
+                    <Route path="user/:id" element={<UsersLayout />}>
                         <Route index element={<ViewUser />} />
                     </Route>
 

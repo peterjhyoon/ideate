@@ -11,11 +11,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 },
             }),
             transformResponse: (responseData) => {
-                const loadedUsers = responseData.map((user) => {
-                    user.id = user._id;
-                    return user;
-                });
-                return loadedUsers;
+                responseData.id = responseData._id;
+                return responseData;
             },
         }),
         addNewUser: builder.mutation({

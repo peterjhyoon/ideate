@@ -43,6 +43,21 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             //     }
             // }
         }),
+        getProjectsByUser: builder.query({
+            query: (user) => ({
+                url: `/projects/user/${user}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            transformResponse: (responseData) => {
+                const loadedProjects = responseData.map((project) => {
+                    project.id = project._id;
+                    return project;
+                });
+                return loadedProjects;
+            },
+        }),
         getProject: builder.query({
             query: ({ id }) => ({
                 url: `/projects/id/${id ? id : ""}`,

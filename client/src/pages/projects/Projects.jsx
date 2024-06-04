@@ -88,7 +88,7 @@ const Projects = () => {
                                 src={imageSrc}
                                 alt="Project"
                             />
-                            <div>
+                            <div className="w-full">
                                 <h2 className="text-xl font-bold">
                                     {project.name}
                                 </h2>
@@ -121,7 +121,7 @@ const Projects = () => {
     }
 
     return (
-        <div className="py-5">
+        <div className="py-5 h-full w-full">
             <SearchBar
                 currKey={searchParams?.key}
                 currLocation={searchParams?.location}

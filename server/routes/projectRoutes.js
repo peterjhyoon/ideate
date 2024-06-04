@@ -14,4 +14,7 @@ router.route('/id/:id')
 router.route('/search')
     .get(projectsController.getSearchProject) // Search for project through key, location and category
 
+router.route('/user/:user')
+    .get(projectsController.getUserProject)
+
 module.exports = router
