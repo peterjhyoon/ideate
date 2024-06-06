@@ -1,7 +1,7 @@
 import SearchBar from "../../components/ui/SearchBar";
 import { useSearchProjectsQuery } from "../../components/projects/projectsApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,8 @@ import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
 
 const Projects = () => {
     let [searchParams, setSearchParams] = useSearchParams();
+
+    const location = useLocation();
 
     const keyParam = searchParams.get("key");
     const locationParam = searchParams.get("location");
@@ -72,7 +74,7 @@ const Projects = () => {
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
                             onClick={() =>
                                 navigate(
-                                    `/projects/${project.id}?key=${
+                                    `/projects/${project.id}?redirect=${location.pathname}&key=${
                                         keyParam ? keyParam : ""
                                     }&location=${
                                         locationParam ? locationParam : ""

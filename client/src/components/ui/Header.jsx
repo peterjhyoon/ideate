@@ -36,7 +36,7 @@ const Header = () => {
     }
 
     return (
-        <nav className="bg-white text-black inset-x-0 top-0 fixed">
+        <nav className="bg-white text-black inset-x-0 top-0 fixed z-20">
             <div className="container mx-auto flex justify-between">
                 <div className="flex space-x-4">
                     <Link

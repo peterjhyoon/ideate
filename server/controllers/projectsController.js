@@ -266,7 +266,7 @@ const getUserProject = asyncHandler( async (req, res) => {
     // Load ID from request
     const { user } = req.params
 
-    if (!id) {
+    if (!user) {
         res.status(400).json({ message: 'Project ID required' })
     }
 

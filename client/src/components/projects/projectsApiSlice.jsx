@@ -44,7 +44,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             // }
         }),
         getProjectsByUser: builder.query({
-            query: (user) => ({
+            query: ({ user }) => ({
                 url: `/projects/user/${user}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
@@ -117,6 +117,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
 export const {
     useSearchProjectsQuery,
     useGetProjectQuery,
+    useGetProjectsByUserQuery,
     useAddNewProjectMutation,
     useUpdateProjectMutation,
     useDeleteProjectMutation,

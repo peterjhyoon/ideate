@@ -12,6 +12,7 @@ const ViewProject = () => {
 
     const searchParams = new URLSearchParams(location.search);
 
+    const redirectParam = searchParams.get("redirect");
     const keyParam = searchParams.get("key");
     const locationParam = searchParams.get("location");
     const categoryParam = searchParams.get("category");
@@ -33,11 +34,15 @@ const ViewProject = () => {
     }
 
     const onClose = () => {
-        navigate(
-            `/projects?key=${keyParam ? keyParam : ""}&location=${
-                locationParam ? locationParam : ""
-            }&category=${categoryParam ? categoryParam : ""}`
-        );
+        if (redirectParam === "/projects") {
+            navigate(
+                `/projects?key=${keyParam ? keyParam : ""}&location=${
+                    locationParam ? locationParam : ""
+                }&category=${categoryParam ? categoryParam : ""}`
+            );
+        } else {
+            navigate(redirectParam);
+        }
     };
 
     const onApply = () => {
