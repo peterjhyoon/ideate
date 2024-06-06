@@ -12,8 +12,8 @@ import ViewInactive from "./ViewInactive";
 const ViewUser = () => {
     // const { id } = useParams();
     const id = "663d6e3c93612d3eb107658c";
-    // const { id: loginId } = useAuth();
-    const loginId = "663d6e3c93612d3eb107658c";
+    const { id: loginId } = useAuth();
+    // const loginId = "663d6e3c93612d3eb107658c";
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -168,9 +168,21 @@ const ViewUser = () => {
                                 </button>
                             </div>
                             <hr className="mt-4 w-5/6 mx-auto" />
-                            {selected === "saved" ? <ViewSaved className="w-full h-[75%]" /> : <></>}
-                            {selected === "applied" ? <ViewApplied className="w-full h-[75%]" /> : <></>}
-                            {selected === "inactive" ? <ViewInactive className="w-full h-[75%]" /> : <></>}
+                            {selected === "saved" ? (
+                                <ViewSaved className="w-full h-[75%]" />
+                            ) : (
+                                <></>
+                            )}
+                            {selected === "applied" ? (
+                                <ViewApplied className="w-full h-[75%]" />
+                            ) : (
+                                <></>
+                            )}
+                            {selected === "inactive" ? (
+                                <ViewInactive className="w-full h-[75%]" />
+                            ) : (
+                                <></>
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col">

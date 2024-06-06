@@ -60,7 +60,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         getProject: builder.query({
             query: ({ id }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 validateStatus: (response, result) => {
                     return (response.status === 200) & !result.isError;
                 },
@@ -91,7 +91,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         updateProject: builder.mutation({
             query: ({ id, ...updateProjectData }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 method: "PATCH",
                 body: {
                     ...updateProjectData,
@@ -103,9 +103,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         deleteProject: builder.mutation({
             query: ({ id }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 method: "DELETE",
-                body: { id },
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }

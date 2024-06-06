@@ -7,11 +7,7 @@ const ViewSaved = ({ user, className }) => {
         </div>
     );
 
-    return (
-        <div className={`${className} overflow-y-auto`}>
-            {content}
-        </div>
-    )
+    return <div className={`${className} overflow-y-auto`}>{content}</div>;
 };
 
 export default ViewSaved;

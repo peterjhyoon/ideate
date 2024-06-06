@@ -162,7 +162,7 @@ const getApplicationByUser = asyncHandler(async (req, res) => {
     const { user } = req.params
 
     // Load search key from request
-    const { key } = req.body
+    const { key } = req.query
 
     if (!user) {
         return res.status(400).json({ message: 'User ID required' })
