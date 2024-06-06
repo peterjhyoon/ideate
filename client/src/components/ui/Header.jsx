@@ -1,8 +1,13 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
+import { useState } from "react";
 
 const Header = () => {
-    const { id, email, profilePicture } = useAuth();
+    const { id, name, profilePicture } = useAuth();
+    // const id = ""
+
+    const [imageSrc, setImageSrc] = useState(defaultProfilePicture);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -25,11 +30,19 @@ const Header = () => {
             </button>
         );
     } else {
+        const onProfileClicked = () => {
+            navigate(`/user/${id}`);
+        };
+
+        if (profilePicture) {
+            setImageSrc(profilePicture);
+        }
+
         content = (
-            <button>
-                <div>
-                    <p></p>
-                    <img />
+            <button onClick={onProfileClicked}>
+                <div className="flex flex-row items-center hover:text-gray-400">
+                    <p className="pe-3">{name}</p>
+                    <img className="h-10" src={imageSrc} alt="Profile" />
                 </div>
             </button>
         );
@@ -55,7 +68,7 @@ const Header = () => {
                         Social
                     </Link>
                 </div>
-                <div className="flex">{content}</div>
+                <div className="flex flex-row">{content}</div>
             </div>
         </nav>
     );

@@ -185,7 +185,12 @@ const getApplicationByUser = asyncHandler(async (req, res) => {
 
     // Get applications and replace project id with project object (Note: location and category are still IDs)
     // Mainly for the purpose of accessing project name and logo
-    const applications = await Application.find(query).populate('project').lean().exec()
+    const applications = await Application.find(query).populate({
+            path: 'project',
+            populate: {
+                path: 'location',
+            },
+        }).lean().exec()
 
     if (!applications?.length) {
         return res.status(404).json({ message: 'No applications found' })

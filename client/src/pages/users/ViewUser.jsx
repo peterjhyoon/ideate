@@ -169,17 +169,17 @@ const ViewUser = () => {
                             </div>
                             <hr className="mt-4 w-5/6 mx-auto" />
                             {selected === "saved" ? (
-                                <ViewSaved className="w-full h-[75%]" />
+                                <ViewSaved className="w-full h-[75%]" user={id} />
                             ) : (
                                 <></>
                             )}
                             {selected === "applied" ? (
-                                <ViewApplied className="w-full h-[75%]" />
+                                <ViewApplied className="w-full h-[75%]" user={id} />
                             ) : (
                                 <></>
                             )}
                             {selected === "inactive" ? (
-                                <ViewInactive className="w-full h-[75%]" />
+                                <ViewInactive className="w-full h-[75%]" user={id} />
                             ) : (
                                 <></>
                             )}

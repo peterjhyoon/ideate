@@ -52,6 +52,12 @@ const Projects = () => {
     }
 
     if (isSuccess) {
+        const mutableProjects = [...projects];
+
+        if (keyParam == null || keyParam === "") {
+            mutableProjects.reverse();
+        }
+
         content = (
             <div
                 className="overflow-y-auto"
@@ -59,7 +65,7 @@ const Projects = () => {
                 id="proj-list"
             >
                 {/* TODO: Style scrollbar */}
-                {projects.map((project, key) => {
+                {mutableProjects.map((project, key) => {
                     let imageSrc = defaultProjectLogo;
 
                     if (project.logo) {
@@ -74,7 +80,9 @@ const Projects = () => {
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
                             onClick={() =>
                                 navigate(
-                                    `/projects/${project.id}?redirect=${location.pathname}&key=${
+                                    `/projects/${project.id}?redirect=${
+                                        location.pathname
+                                    }&key=${
                                         keyParam ? keyParam : ""
                                     }&location=${
                                         locationParam ? locationParam : ""
