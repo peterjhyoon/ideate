@@ -259,11 +259,39 @@ const getSearchProject = asyncHandler(async (req, res) => {
     res.json(projectsWithInfo)
 })
 
+// @desc Search project through User ID
+// @route GET /projects/user/:user
+// @access Private
+const getUserProject = asyncHandler( async (req, res) => {
+    // Load ID from request
+    const { user } = req.params
+
+    if (!user) {
+        res.status(400).json({ message: 'Project ID required' })
+    }
+
+    const projects = await Project.find({ user }).lean().exec()
+
+    if (!projects.length) {
+        return res.status(404).json({ message: 'No projects found' })
+    }
+
+    // Replace location and category ID with info
+    const projectsWithInfo = await Promise.all(projects.map(async (project) => {
+        const location = await Location.findById(project.location).lean().exec()
+        const category = await Category.findById(project.category).lean().exec()
+        return { ...project, location: location, category: category.category }
+    }))
+
+    res.json(projectsWithInfo)
+})
+
 module.exports = {
     getAllProjects,
     createNewProject,
     getProject,
     updateProject,
     deleteProject,
-    getSearchProject
+    getSearchProject,
+    getUserProject
 }

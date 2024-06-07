@@ -1,7 +1,7 @@
 import SearchBar from "../../components/ui/SearchBar";
 import { useSearchProjectsQuery } from "../../components/projects/projectsApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,8 @@ import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
 
 const Projects = () => {
     let [searchParams, setSearchParams] = useSearchParams();
+
+    const location = useLocation();
 
     const keyParam = searchParams.get("key");
     const locationParam = searchParams.get("location");
@@ -50,6 +52,12 @@ const Projects = () => {
     }
 
     if (isSuccess) {
+        const mutableProjects = [...projects];
+
+        if (keyParam == null || keyParam === "") {
+            mutableProjects.reverse();
+        }
+
         content = (
             <div
                 className="overflow-y-auto"
@@ -57,7 +65,7 @@ const Projects = () => {
                 id="proj-list"
             >
                 {/* TODO: Style scrollbar */}
-                {projects.map((project, key) => {
+                {mutableProjects.map((project, key) => {
                     let imageSrc = defaultProjectLogo;
 
                     if (project.logo) {
@@ -72,7 +80,9 @@ const Projects = () => {
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
                             onClick={() =>
                                 navigate(
-                                    `/projects/${project.id}?key=${
+                                    `/projects/${project.id}?redirect=${
+                                        location.pathname
+                                    }&key=${
                                         keyParam ? keyParam : ""
                                     }&location=${
                                         locationParam ? locationParam : ""
@@ -88,7 +98,7 @@ const Projects = () => {
                                 src={imageSrc}
                                 alt="Project"
                             />
-                            <div>
+                            <div className="w-full">
                                 <h2 className="text-xl font-bold">
                                     {project.name}
                                 </h2>
@@ -121,7 +131,7 @@ const Projects = () => {
     }
 
     return (
-        <div className="py-5">
+        <div className="py-5 h-full w-full">
             <SearchBar
                 currKey={searchParams?.key}
                 currLocation={searchParams?.location}

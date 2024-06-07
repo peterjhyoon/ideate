@@ -43,9 +43,24 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             //     }
             // }
         }),
+        getProjectsByUser: builder.query({
+            query: ({ user }) => ({
+                url: `/projects/user/${user}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            transformResponse: (responseData) => {
+                const loadedProjects = responseData.map((project) => {
+                    project.id = project._id;
+                    return project;
+                });
+                return loadedProjects;
+            },
+        }),
         getProject: builder.query({
             query: ({ id }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 validateStatus: (response, result) => {
                     return (response.status === 200) & !result.isError;
                 },
@@ -76,7 +91,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         updateProject: builder.mutation({
             query: ({ id, ...updateProjectData }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 method: "PATCH",
                 body: {
                     ...updateProjectData,
@@ -88,9 +103,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
         }),
         deleteProject: builder.mutation({
             query: ({ id }) => ({
-                url: `/projects/id/${id ? id : ""}`,
+                url: `/projects/id/${id}`,
                 method: "DELETE",
-                body: { id },
             }),
             // invalidatesTags: (result, error, arg) => [
             //     { type: 'Project', id: arg.id }
@@ -102,6 +116,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
 export const {
     useSearchProjectsQuery,
     useGetProjectQuery,
+    useGetProjectsByUserQuery,
     useAddNewProjectMutation,
     useUpdateProjectMutation,
     useDeleteProjectMutation,
