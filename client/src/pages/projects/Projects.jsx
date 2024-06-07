@@ -80,13 +80,9 @@ const Projects = () => {
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
                             to={`/projects/${project.id}?redirect=${
                                 location.pathname
-                            }&key=${
-                                keyParam ? keyParam : ""
-                            }&location=${
+                            }&key=${keyParam ? keyParam : ""}&location=${
                                 locationParam ? locationParam : ""
-                            }&category=${
-                                categoryParam ? categoryParam : ""
-                            }`}
+                            }&category=${categoryParam ? categoryParam : ""}`}
                             key={key}
                         >
                             <img
