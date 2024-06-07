@@ -1,7 +1,7 @@
 import SearchBar from "../../components/ui/SearchBar";
 import { useSearchProjectsQuery } from "../../components/projects/projectsApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -76,21 +76,17 @@ const Projects = () => {
                     }
 
                     return (
-                        <div
+                        <Link
                             className="w-full mx-auto hover:bg-gray-100 ps-20 pe-14 pt-5 flex items-start"
-                            onClick={() =>
-                                navigate(
-                                    `/projects/${project.id}?redirect=${
-                                        location.pathname
-                                    }&key=${
-                                        keyParam ? keyParam : ""
-                                    }&location=${
-                                        locationParam ? locationParam : ""
-                                    }&category=${
-                                        categoryParam ? categoryParam : ""
-                                    }`
-                                )
-                            }
+                            to={`/projects/${project.id}?redirect=${
+                                location.pathname
+                            }&key=${
+                                keyParam ? keyParam : ""
+                            }&location=${
+                                locationParam ? locationParam : ""
+                            }&category=${
+                                categoryParam ? categoryParam : ""
+                            }`}
                             key={key}
                         >
                             <img
@@ -114,7 +110,7 @@ const Projects = () => {
                                 </p>
                                 <hr className="mt-5 mx-auto" />
                             </div>
-                        </div>
+                        </Link>
                     );
                 })}
                 <button

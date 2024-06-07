@@ -1,8 +1,16 @@
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useGetProjectQuery } from "../../components/projects/projectsApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faBookmark as faBookmarkSolid,
+    faEdit,
+} from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
+import { useGetApplicationByUserAndProjectQuery } from "../../components/applications/applicationApiSlice";
+import useAuth from "../../hooks/useAuth";
 
 const ViewProject = () => {
     const { id } = useParams();
@@ -17,6 +25,8 @@ const ViewProject = () => {
     const locationParam = searchParams.get("location");
     const categoryParam = searchParams.get("category");
 
+    const { id: user } = useAuth();
+
     const {
         data: project,
         isLoading,
@@ -24,7 +34,18 @@ const ViewProject = () => {
         isError,
     } = useGetProjectQuery({ id });
 
+    const { data: application, isSuccess: foundApplication } =
+        useGetApplicationByUserAndProjectQuery({ user, project: id });
+
     const [imageSrc, setImageSrc] = useState(defaultProjectLogo);
+    const [isSaved, setIsSaved] = useState(false);
+    const [applied, setApplied] = useState(false);
+
+    useEffect(() => {
+        if (foundApplication && application.active) {
+            setApplied(true);
+        }
+    }, [foundApplication, application]);
 
     if (project?.logo) {
         console.log("hello");
@@ -43,10 +64,6 @@ const ViewProject = () => {
         } else {
             navigate(redirectParam);
         }
-    };
-
-    const onApply = () => {
-        // TODO
     };
 
     let content;
@@ -68,6 +85,18 @@ const ViewProject = () => {
     }
 
     if (isSuccess) {
+        const onSave = () => {
+            setIsSaved(!isSaved);
+            // TODO: set saved in backend
+            // possibly use useEffect to update isSaved
+        };
+
+        const onApply = () => {
+            // TODO
+        };
+
+        console.log(project.id);
+
         content = (
             <div className="w-full h-full flex flex-col relative">
                 {/* Header */}
@@ -115,11 +144,35 @@ const ViewProject = () => {
                 <div className="flex flex-col h-auto px-20 overflow-y-auto">
                     <p className="font-medium">{project.description}</p>
                 </div>
+                {user === project.user.id ? (
+                    <button className="z-10 rounded-full bg-gray-200 w-14 h-14 absolute bottom-14 right-[296px] hover:bg-gray-300">
+                        <FontAwesomeIcon
+                            icon={faEdit}
+                            className="text-xl text-black"
+                        />
+                    </button>
+                ) : (
+                    <></>
+                )}
                 <button
-                    className="z-10 rounded-full bg-purple-700 w-32 h-14 absolute bottom-14 right-20 hover:bg-purple-500"
-                    onClick={onApply}
+                    className="z-10 rounded-full bg-gray-200 w-14 h-14 absolute bottom-14 right-56 hover:bg-gray-300"
+                    onClick={onSave}
                 >
-                    <p className="text-white font-medium text-xl">Apply</p>
+                    <FontAwesomeIcon
+                        icon={isSaved ? faBookmarkSolid : faBookmarkRegular}
+                        className="text-xl text-black"
+                    />
+                </button>
+                <button
+                    className={`z-10 rounded-full ${
+                        applied ? "bg-purple-500" : "bg-purple-700"
+                    } w-32 h-14 absolute bottom-14 right-20 hover:bg-purple-500`}
+                    onClick={onApply}
+                    disabled={applied}
+                >
+                    <p className="text-white font-medium text-xl">
+                        {applied ? "Applied" : "Apply"}
+                    </p>
                 </button>
             </div>
         );

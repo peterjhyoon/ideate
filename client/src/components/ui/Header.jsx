@@ -1,15 +1,16 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
 import { useState } from "react";
 
 const Header = () => {
     const { id, name, profilePicture } = useAuth();
-    // const id = ""
+    // const id = "";
+    // const profilePicture = null;
+    // const name = "";
 
     const [imageSrc, setImageSrc] = useState(defaultProfilePicture);
 
-    const navigate = useNavigate();
     const location = useLocation();
 
     let content;
@@ -17,34 +18,26 @@ const Header = () => {
     if (id === "") {
         const redirect = location.pathname;
 
-        const onLoginClicked = () => {
-            navigate(`/login?redirect=${redirect}`);
-        };
-
         content = (
-            <button
-                className="mt-3 w-20 h-10 bg-purple-700 hover:bg-purple-500 rounded-xl text-white font-medium"
-                onClick={onLoginClicked}
+            <Link
+                className="mt-3 w-20 h-10 bg-purple-700 hover:bg-purple-500 rounded-xl text-white font-medium flex items-center justify-center"
+                to={`/login?redirect=${redirect}`}
             >
                 Login
-            </button>
+            </Link>
         );
     } else {
-        const onProfileClicked = () => {
-            navigate(`/user/${id}`);
-        };
-
         if (profilePicture) {
             setImageSrc(profilePicture);
         }
 
         content = (
-            <button onClick={onProfileClicked}>
+            <Link className="py-3" to={`/user/${id}`}>
                 <div className="flex flex-row items-center hover:text-gray-400">
                     <p className="pe-3">{name}</p>
                     <img className="h-10" src={imageSrc} alt="Profile" />
                 </div>
-            </button>
+            </Link>
         );
     }
 

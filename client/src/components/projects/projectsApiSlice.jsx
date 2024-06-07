@@ -6,7 +6,7 @@ import { apiSlice } from "../../app/api/apiSlice";
 
 export const projectsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        searchProjects: builder.query({
+        searchProjects: builder.query({ // Populates user, location, and replaces category with string
             query: (projectSearchData) => ({
                 url: `/projects/search?key=${
                     projectSearchData?.key ? projectSearchData.key : ""
@@ -26,6 +26,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             transformResponse: (responseData) => {
                 const loadedProjects = responseData.map((project) => {
                     project.id = project._id;
+                    project.user.id = project.user._id;
+                    project.location.id = project.location._id;
                     return project;
                 });
                 return loadedProjects;
@@ -43,7 +45,7 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             //     }
             // }
         }),
-        getProjectsByUser: builder.query({
+        getProjectsByUser: builder.query({ // Populates user, location, and replaces category with string
             query: ({ user }) => ({
                 url: `/projects/user/${user}`,
                 validateStatus: (response, result) => {
@@ -53,12 +55,13 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             transformResponse: (responseData) => {
                 const loadedProjects = responseData.map((project) => {
                     project.id = project._id;
+                    project.location.id = project.location._id;
                     return project;
                 });
                 return loadedProjects;
             },
         }),
-        getProject: builder.query({
+        getProject: builder.query({ // Populates user, location, and replaces category with string
             query: ({ id }) => ({
                 url: `/projects/id/${id}`,
                 validateStatus: (response, result) => {
@@ -67,6 +70,8 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
             }),
             transformResponse: (responseData) => {
                 responseData.id = responseData._id;
+                responseData.user.id = responseData.user._id;
+                responseData.location.id = responseData.location._id;
                 return responseData;
             },
             // providesTags: (result, error, arg) => {

@@ -128,7 +128,8 @@ const SelectProfilePicture = ({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-            <div className="bg-white rounded-3xl overflow-hidden transform transition-all h-[34rem] w-[40rem]">
+            <button className="fixed w-full h-full" onClick={onClose} />
+            <div className="bg-white rounded-3xl overflow-hidden transform transition-all h-[34rem] w-[40rem] z-60">
                 <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                     <p className="text-2xl leading-6 font-medium">
                         Profile Picture
