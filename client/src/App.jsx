@@ -12,6 +12,8 @@ import ViewUser from "./pages/users/ViewUser";
 import NotFound from "./pages/NotFound";
 import ProjectsLayout from "./components/projects/ProjectsLayout";
 import UsersLayout from "./components/users/UsersLayout";
+import UserApplications from "./pages/applications/UserApplications";
+import EditUser from "./pages/users/EditUser";
 
 function App() {
     return (
@@ -35,6 +37,8 @@ function App() {
                     {/* User Routes */}
                     <Route path="user/:id" element={<UsersLayout />}>
                         <Route index element={<ViewUser />} />
+                        <Route path="edit" element={<EditUser />} />
+                        <Route path="applications" element={<UserApplications />} />
                     </Route>
 
                     {/* 404 Not Found route */}

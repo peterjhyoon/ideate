@@ -1,10 +1,10 @@
 import React from "react";
-import { useGetApplicationByUserQuery } from "../../components/applications/applicationApiSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useGetApplicationByUserQuery } from "../applications/applicationApiSlice";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useLocation, useNavigate } from "react-router-dom";
 import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
 
-const ViewInactive = ({ user, key = "", className }) => {
+const ViewApplied = ({ user, key = "", className }) => {
     const {
         data: applications,
         isLoading,
@@ -28,9 +28,7 @@ const ViewInactive = ({ user, key = "", className }) => {
     if (isError) {
         content = (
             <div className="w-full h-full flex justify-center items-center">
-                <p className="text-gray-600">
-                    No inactive applications found... :(
-                </p>
+                <p className="text-gray-600">No applications found... :(</p>
             </div>
         );
     }
@@ -41,11 +39,11 @@ const ViewInactive = ({ user, key = "", className }) => {
             applications.reverse();
         }
 
-        const inactiveApplications = applications.filter(
-            (application) => !application.active
+        const activeApplications = applications.filter(
+            (application) => application.active
         );
 
-        content = inactiveApplications.map((application, index) => {
+        content = activeApplications.map((application, index) => {
             let imageSrc = defaultProjectLogo;
 
             const project = application.project;
@@ -88,4 +86,4 @@ const ViewInactive = ({ user, key = "", className }) => {
     return <div className={`${className} overflow-y-auto`}>{content}</div>;
 };
 
-export default ViewInactive;
+export default ViewApplied;
