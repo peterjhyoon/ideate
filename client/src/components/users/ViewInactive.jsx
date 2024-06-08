@@ -76,8 +76,10 @@ const ViewInactive = ({ user, key = "", className }) => {
                         <h2 className="text-xl font-bold">{project.name}</h2>
                         <p
                             className="text-slate-500"
-                            id="textContainer"
                         >{`${project.location.state}, ${project.location.country}`}</p>
+                        <p
+                            className="text-slate-500 text-sm"
+                        >{`Applied on ${new Date(application.createdAt).toLocaleDateString}`}</p>
                         <hr className="mt-5 mx-auto" />
                     </div>
                 </div>
