@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import defaultProjectLogo from "../../assets/images/defaultProjectLogo.png";
+import { useEffect, useState } from "react";
 
 const Projects = () => {
     let [searchParams, setSearchParams] = useSearchParams();
@@ -21,11 +22,7 @@ const Projects = () => {
         isLoading,
         isSuccess,
         isError,
-    } = useSearchProjectsQuery({
-        key: keyParam,
-        location: locationParam,
-        category: categoryParam,
-    });
+    } = useSearchProjectsQuery({ key: keyParam || "", location: locationParam || "", category: categoryParam || "" });
 
     const navigate = useNavigate();
 
@@ -52,20 +49,13 @@ const Projects = () => {
     }
 
     if (isSuccess) {
-        const mutableProjects = [...projects];
-
-        if (keyParam == null || keyParam === "") {
-            mutableProjects.reverse();
-        }
-
         content = (
             <div
                 className="overflow-y-auto"
                 style={{ height: "59vh" }}
                 id="proj-list"
             >
-                {/* TODO: Style scrollbar */}
-                {mutableProjects.map((project, key) => {
+                {projects.map((project, key) => {
                     let imageSrc = defaultProjectLogo;
 
                     if (project.logo) {

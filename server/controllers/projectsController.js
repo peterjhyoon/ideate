@@ -256,6 +256,10 @@ const getSearchProject = asyncHandler(async (req, res) => {
         return { ...project, user: user, location: location, category: category.category }
     }))
 
+    if (!key) {
+        projectsWithInfo.reverse();
+    }
+
     res.json(projectsWithInfo)
 })
 

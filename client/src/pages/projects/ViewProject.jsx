@@ -34,6 +34,8 @@ const ViewProject = () => {
         isError,
     } = useGetProjectQuery({ id });
 
+    // TODO: Check wether the project has been saved in backend
+
     const { data: application, isSuccess: foundApplication } =
         useGetApplicationByUserAndProjectQuery({ user, project: id });
 
@@ -46,13 +48,6 @@ const ViewProject = () => {
             setApplied(true);
         }
     }, [foundApplication, application]);
-
-    if (project?.logo) {
-        console.log("hello");
-        const blob = new Blob([project.logo], { type: "image/png" });
-        const imageUrl = URL.createObjectURL(blob);
-        setImageSrc(imageUrl);
-    }
 
     const onClose = () => {
         if (redirectParam === "/projects") {
@@ -85,6 +80,12 @@ const ViewProject = () => {
     }
 
     if (isSuccess) {
+        if (project.logo) {
+            const blob = new Blob([project.logo], { type: "image/png" });
+            const imageUrl = URL.createObjectURL(blob);
+            setImageSrc(imageUrl);
+        }
+
         const onSave = () => {
             setIsSaved(!isSaved);
             // TODO: set saved in backend

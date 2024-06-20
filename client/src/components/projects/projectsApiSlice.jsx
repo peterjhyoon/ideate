@@ -8,20 +8,11 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         searchProjects: builder.query({ // Populates user, location, and replaces category with string
             query: (projectSearchData) => ({
-                url: `/projects/search?key=${
-                    projectSearchData?.key ? projectSearchData.key : ""
-                }&location=${
-                    projectSearchData?.location
-                        ? projectSearchData.location
-                        : ""
-                }&category=${
-                    projectSearchData?.category
-                        ? projectSearchData.category
-                        : ""
-                }`,
+                url: `/projects/search`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
+                params: projectSearchData
             }),
             transformResponse: (responseData) => {
                 const loadedProjects = responseData.map((project) => {

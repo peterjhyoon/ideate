@@ -37,7 +37,6 @@ function App() {
                     {/* User Routes */}
                     <Route path="user/:id" element={<UsersLayout />}>
                         <Route index element={<ViewUser />} />
-                        <Route path="edit" element={<EditUser />} />
                         <Route path="applications" element={<UserApplications />} />
                     </Route>
 

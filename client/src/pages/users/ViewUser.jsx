@@ -10,12 +10,13 @@ import ViewApplied from "../../components/users/ViewApplied";
 import ViewInactive from "../../components/users/ViewInactive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand, faPen } from "@fortawesome/free-solid-svg-icons";
+import EditUserModal from "../../components/users/EditUserModal";
 
 const ViewUser = () => {
     const { id } = useParams();
     // const id = "663d6e3c93612d3eb107658c";
     const { id: loginId } = useAuth();
-    // const loginId = "663d6e3c93612d3eb107658c";
+    // const loginId = "663d6e3c93612d3eb107658";
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -35,6 +36,13 @@ const ViewUser = () => {
 
     const [imageUrl, setImageUrl] = useState(defaultProfilePicture);
     const [selected, setSelected] = useState("saved");
+    const [editUser, setEditUser] = useState(false);
+    const [editProfile, setEditProfile] = useState(false);
+
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [university, setUniversity] = useState("")
+    const [description, setDescription] = useState("")
 
     let content;
 
@@ -52,6 +60,17 @@ const ViewUser = () => {
     }
 
     if (isSuccess) {
+        if (user.profilePicture) {
+            const blob = new Blob([user.profilePicture], { type: "image/png" });
+            const imageUrl = URL.createObjectURL(blob);
+            setImageUrl(imageUrl);
+        }
+
+        // setFirstName(user.firstName);
+        // setLastName(user.lastName);
+        // setUniversity(user.university);
+        // setDescription(user.description);
+
         if (id !== loginId) {
             // Viewing other people's profile
             content = (
@@ -60,13 +79,13 @@ const ViewUser = () => {
                         className="container bg-white border border-black rounded-[40px] relative flex flex-col items-center mx-5"
                         style={{ height: "60vh", width: "70vh" }}
                     >
-                        <div className="w-full h-1/5 bg-purple-700 rounded-t-[40px]"></div>
+                        <div className="w-full h-[10%] bg-purple-700 rounded-t-[40px]" />
                         <img
                             className="rounded-full h-60 w-60 my-8 border border-black absolute top-20"
                             src={imageUrl}
                             alt="Profile"
                         />
-                        <p className="font-bold text-3xl mt-60 mb-3">
+                        <p className="font-bold text-3xl mt-80 mb-3">
                             {user.firstName} {user.lastName}
                         </p>
                         <p className="font-medium text-lg my-2 text-gray-500">
@@ -76,15 +95,26 @@ const ViewUser = () => {
                             {user.university}
                         </p>
                     </div>
-                    <div className="sm:hidden lg:flex flex flex-col h-[70vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black">
-                        <p className="font-bold text-2xl mt-8 mx-12">
-                            {user.firstName}'s Projects
-                        </p>
-                        <hr className="mt-5 w-5/6 mx-auto" />
-                        <ViewProjectsByUser
-                            id={id}
-                            className="w-full h-5/6 px-3"
-                        />
+                    <div className="flex flex-col">
+                        <div className="sm:hidden lg:flex flex flex-col h-[30vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black mb-10">
+                            <h1 className="mx-12 font-bold text-2xl mt-8">
+                                Description
+                            </h1>
+                            <hr className="mt-3 w-5/6 mx-auto" />
+                            <p className="font-medium text-gray-600 mx-12 mt-3">
+                                {"This user has not left a description... :("}
+                            </p>
+                        </div>
+                        <div className="sm:hidden lg:flex flex flex-col h-[60vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black">
+                            <h1 className="font-bold text-2xl mt-8 mx-12">
+                                {user.firstName}'s Projects
+                            </h1>
+                            <hr className="mt-5 w-5/6 mx-auto" />
+                            <ViewProjectsByUser
+                                id={id}
+                                className="w-full h-5/6 px-3 mb-9"
+                            />
+                        </div>
                     </div>
                 </div>
             );
@@ -105,6 +135,11 @@ const ViewUser = () => {
                 setSelected("inactive");
             };
 
+            const onEditClicked = () => {
+                setEditUser(true);
+                document.body.style.overflow = "hidden";
+            };
+
             // Viewing own profile
             content = (
                 <div className="w-full h-full flex flex-row justify-center py-20">
@@ -114,9 +149,12 @@ const ViewUser = () => {
                             style={{ height: "60vh", width: "70vh" }}
                         >
                             <div className="w-full h-[10%] bg-purple-700 rounded-t-[40px] flex items-center justify-end pe-10">
-                                <Link to={`${location.pathname}/edit`}>
-                                    <FontAwesomeIcon icon={faPen} className="text-white text-lg hover:text-gray-300"/>
-                                </Link>
+                                <button onClick={onEditClicked}>
+                                    <FontAwesomeIcon
+                                        icon={faPen}
+                                        className="text-white text-lg hover:text-gray-300"
+                                    />
+                                </button>
                             </div>
                             <img
                                 className="rounded-full h-60 w-60 my-8 border border-black absolute top-20"
@@ -143,7 +181,10 @@ const ViewUser = () => {
                                     My Applications
                                 </p>
                                 <Link to={`${location.pathname}/applications`}>
-                                    <FontAwesomeIcon icon={faExpand} className="pt-7 pe-10 text-lg text-gray-500 hover:text-gray-700"/>
+                                    <FontAwesomeIcon
+                                        icon={faExpand}
+                                        className="pt-7 pe-10 text-lg text-gray-500 hover:text-gray-700"
+                                    />
                                 </Link>
                             </div>
                             <div className="w-full flex flex-row mx-12 mt-3">
@@ -179,44 +220,56 @@ const ViewUser = () => {
                                 </button>
                             </div>
                             <hr className="mt-4 w-5/6 mx-auto" />
-                            {selected === "saved" ? (
+                            {selected === "saved" && (
                                 <ViewSaved
                                     className="w-full h-[75%]"
                                     user={id}
                                 />
-                            ) : (
-                                <></>
                             )}
-                            {selected === "applied" ? (
+                            {selected === "applied" && (
                                 <ViewApplied
                                     className="w-full h-[75%]"
                                     user={id}
                                 />
-                            ) : (
-                                <></>
                             )}
-                            {selected === "inactive" ? (
+                            {selected === "inactive" && (
                                 <ViewInactive
                                     className="w-full h-[75%]"
                                     user={id}
                                 />
-                            ) : (
-                                <></>
                             )}
                         </div>
                     </div>
                     <div className="flex flex-col">
-                        <div className="sm:hidden lg:flex flex flex-col h-[70vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black">
-                            <p className="font-bold text-2xl mt-8 mx-12">
-                                My Projects
+                        <div className="sm:hidden lg:flex flex flex-col h-[30vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black mb-10">
+                            <h1 className="mx-12 font-bold text-2xl mt-8">
+                                Description
+                            </h1>
+                            <hr className="mt-3 w-5/6 mx-auto" />
+                            <p className="font-medium text-gray-600 mx-12 mt-3">
+                                {"This user has not left a description... :("}
                             </p>
+                        </div>
+                        <div className="sm:hidden lg:flex flex flex-col h-[70vh] w-[40vh] bg-white rounded-[40px] mx-5 border border-black">
+                            <h1 className="font-bold text-2xl mt-8 mx-12">
+                                My Projects
+                            </h1>
                             <hr className="mt-5 w-5/6 mx-auto" />
                             <ViewProjectsByUser
                                 id={id}
-                                className="w-full h-5/6 px-3"
+                                className="w-full h-5/6 px-3 mb-9"
                             />
                         </div>
                     </div>
+
+                    {editUser && (
+                        <EditUserModal
+                            setEditUser={setEditUser}
+                            firstName={user.firstName}
+                            lastName={user.lastName}
+                            university={user.university}
+                        />
+                    )}
                 </div>
             );
         }

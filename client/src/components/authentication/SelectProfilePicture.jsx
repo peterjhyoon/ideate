@@ -6,6 +6,8 @@ import ReactCrop, {
     makeAspectCrop,
 } from "react-image-crop";
 import defaultProfilePicture from "../../assets/images/defaultProfilePicture.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
 
 const SelectProfilePicture = ({
     onClose,
@@ -129,9 +131,9 @@ const SelectProfilePicture = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
             <button className="fixed w-full h-full" onClick={onClose} />
-            <div className="bg-white rounded-3xl overflow-hidden transform transition-all h-[34rem] w-[40rem] z-60">
+            <div className="bg-white rounded-[45px] overflow-hidden transform transition-all h-[34rem] w-[40rem] z-60">
                 <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-                    <p className="text-2xl leading-6 font-medium">
+                    <p className="text-2xl leading-6 font-bold">
                         Profile Picture
                     </p>
                     <button
@@ -176,33 +178,36 @@ const SelectProfilePicture = ({
                         />
                     </ReactCrop>
                 </div>
-                <div className="flex flex-column flex-grow justify-center items-center space-x-20 pt-2">
-                    <div>
-                        <AuthButton
-                            buttonText={"Save"}
-                            styleConfig={
-                                "bg-purple-700 hover:bg-purple-300 text-white"
-                            }
-                            onClick={onSaveClicked}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="file"
-                            id="fileInput"
-                            ref={fileInputRef}
-                            className="hidden"
-                            onChange={onFileChanged}
-                            accept="image/*"
-                        />
-                        <AuthButton
-                            buttonText={"Upload"}
-                            styleConfig={
-                                "bg-purple-700 hover:bg-purple-300 text-white"
-                            }
-                            onClick={onUploadClicked}
-                        />
-                    </div>
+                <div className="flex flex-column flex-grow justify-end items-center pt-7 px-10 space-x-5">
+                    <button
+                        className="bg-white hover:bg-gray-200 w-20 h-10 rounded-3xl border border-black font-medium text-gray-600"
+                        onClick={onClose}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        buttonText={"Save"}
+                        className="bg-purple-700 hover:bg-purple-500 text-white w-20 h-10 rounded-3xl font-medium"
+                        onClick={onSaveClicked}
+                    >
+                        Save
+                    </button>
+                </div>
+                <div>
+                    <input
+                        type="file"
+                        id="fileInput"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={onFileChanged}
+                        accept="image/*"
+                    />
+                    <button
+                        className="bg-purple-700 hover:bg-purple-500 w-14 h-14 text-white rounded-full font-medium fixed end-10 bottom-32 text-2xl"
+                        onClick={onUploadClicked}
+                    >
+                        <FontAwesomeIcon icon={faAdd} />
+                    </button>
                 </div>
             </div>
             <canvas ref={canvasRef} hidden />
